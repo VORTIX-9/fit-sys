@@ -1,0 +1,265 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+}
+
+
+enum OrgStatus {
+  ACTIVE
+  SUSPENDED
+  INTERNAL
+}
+
+enum UserRole {
+  OWNER
+  MANAGER
+  STAFF
+  MEMBER
+  TRAINER
+}
+
+enum TrainerStatus {
+  ACTIVE
+  INACTIVE
+}
+
+enum PlanTier {
+  BASIC
+  PRO
+  PREMIUM
+}
+
+enum SubscriptionStatus {
+  ACTIVE
+  EXPIRED
+  CANCELLED
+  PENDING_PAYMENT
+  FROZEN
+}
+
+enum PaymentMethod {
+  QPAY
+  BANK_TRANSFER
+  CASH
+  SOCIALPAY
+}
+
+enum PaymentStatus {
+  PENDING
+  COMPLETED
+  FAILED
+  REFUNDED
+}
+
+enum ClassStatus {
+  SCHEDULED
+  CANCELLED
+  COMPLETED
+}
+
+enum BookingStatus {
+  RESERVED
+  WAITLISTED
+  CANCELLED
+}
+
+enum AttendanceMethod {
+  QR_SCAN
+  MANUAL_ENTRY
+}
+
+model Organization {
+  id              String           @id @default(uuid())
+  slug            String           @unique
+  name            String
+  brandingConfig  Json?
+  status          OrgStatus        @default(ACTIVE)
+  createdAt       DateTime         @default(now())
+  updatedAt       DateTime         @updatedAt
+  
+  locations       Location[]
+  users           User[]
+  membershipPlans MembershipPlan[]
+  subscriptions   Subscription[]
+  payments        Payment[]
+  classes         Class[]
+  bookings        Booking[]
+  attendance      Attendance[]
+}
+
+model Location {
+  id             String       @id @default(uuid())
+  organizationId String
+  organization   Organization @relation(fields: [organizationId], references: [id])
+  name           String
+  address        String
+  contactNumber  String?
+  operatingHours Json?
+  createdAt      DateTime     @default(now())
+  updatedAt      DateTime     @updatedAt
+  
+  classes        Class[]
+
+  @@index([organizationId])
+}
+
+model User {
+  id             String       @id @default(uuid())
+  organizationId String
+  organization   Organization @relation(fields: [organizationId], references: [id])
+  email          String?
+  phone          String
+  fullName       String
+  role           UserRole     @default(MEMBER)
+  avatarUrl      String?
+  metadata       Json?
+  createdAt      DateTime     @default(now())
+  updatedAt      DateTime     @updatedAt
+
+  trainer        Trainer?
+  subscriptions  Subscription[]
+  bookings       Booking[]
+  attendance     Attendance[]
+
+  @@unique([organizationId, phone])
+  @@index([organizationId])
+}
+
+model Trainer {
+  id             String        @id @default(uuid())
+  userId         String        @unique
+  user           User          @relation(fields: [userId], references: [id])
+  bio            String?
+  specialties    String? // JSON array
+  commissionRate Float?
+  status         TrainerStatus @default(ACTIVE)
+  createdAt      DateTime      @default(now())
+  updatedAt      DateTime      @updatedAt
+  
+  classes        Class[]
+}
+
+model MembershipPlan {
+  id             String       @id @default(uuid())
+  organizationId String
+  organization   Organization @relation(fields: [organizationId], references: [id])
+  name           String
+  tier           PlanTier     @default(BASIC)
+  durationDays   Int
+  sessionLimit   Int?
+  priceMnt       Float
+  isActive       Boolean      @default(true)
+  createdAt      DateTime     @default(now())
+  updatedAt      DateTime     @updatedAt
+
+  subscriptions  Subscription[]
+
+  @@index([organizationId])
+}
+
+model Subscription {
+  id                String             @id @default(uuid())
+  organizationId    String
+  organization      Organization       @relation(fields: [organizationId], references: [id])
+  userId            String
+  user              User               @relation(fields: [userId], references: [id])
+  planId            String
+  plan              MembershipPlan     @relation(fields: [planId], references: [id])
+  startDate         DateTime
+  endDate           DateTime
+  remainingSessions Int?
+  status            SubscriptionStatus @default(PENDING_PAYMENT)
+  createdAt         DateTime           @default(now())
+  updatedAt         DateTime           @updatedAt
+
+  payments          Payment[]
+  attendance        Attendance[]
+
+  @@index([organizationId])
+  @@index([userId])
+}
+
+model Payment {
+  id             String        @id @default(uuid())
+  organizationId String
+  organization   Organization  @relation(fields: [organizationId], references: [id])
+  subscriptionId String
+  subscription   Subscription  @relation(fields: [subscriptionId], references: [id])
+  amount         Float
+  method         PaymentMethod
+  externalRef    String?
+  status         PaymentStatus @default(PENDING)
+  processedAt    DateTime?
+  createdAt      DateTime      @default(now())
+  updatedAt      DateTime      @updatedAt
+
+  @@index([organizationId])
+  @@index([subscriptionId])
+}
+
+model Class {
+  id             String       @id @default(uuid())
+  organizationId String
+  organization   Organization @relation(fields: [organizationId], references: [id])
+  locationId     String
+  location       Location     @relation(fields: [locationId], references: [id])
+  trainerId      String
+  trainer        Trainer      @relation(fields: [trainerId], references: [id])
+  name           String
+  startTime      DateTime
+  endTime        DateTime
+  capacity       Int
+  status         ClassStatus  @default(SCHEDULED)
+  createdAt      DateTime     @default(now())
+  updatedAt      DateTime     @updatedAt
+
+  bookings       Booking[]
+  attendance     Attendance[]
+
+  @@index([organizationId])
+  @@index([locationId])
+  @@index([trainerId])
+}
+
+model Booking {
+  id             String        @id @default(uuid())
+  organizationId String
+  organization   Organization  @relation(fields: [organizationId], references: [id])
+  classId        String
+  class          Class         @relation(fields: [classId], references: [id])
+  userId         String
+  user           User          @relation(fields: [userId], references: [id])
+  status         BookingStatus @default(RESERVED)
+  createdAt      DateTime      @default(now())
+  updatedAt      DateTime      @updatedAt
+
+  @@index([organizationId])
+  @@index([classId])
+  @@index([userId])
+}
+
+model Attendance {
+  id             String           @id @default(uuid())
+  organizationId String
+  organization   Organization     @relation(fields: [organizationId], references: [id])
+  userId         String
+  user           User             @relation(fields: [userId], references: [id])
+  subscriptionId String?
+  subscription   Subscription?    @relation(fields: [subscriptionId], references: [id])
+  classId        String?
+  class          Class?           @relation(fields: [classId], references: [id])
+  entryTime      DateTime         @default(now())
+  exitTime       DateTime?
+  method         AttendanceMethod @default(QR_SCAN)
+  createdAt      DateTime         @default(now())
+  updatedAt      DateTime         @updatedAt
+
+  @@index([organizationId])
+  @@index([userId])
+}
