@@ -75,7 +75,7 @@ export default function AdminDashboardPlaceholder({ slug }: { slug: string }) {
                     <p className="text-sm font-semibold">{t("realtime_control")}</p>
                     <div className="mt-4 divide-y divide-line">
                         {[
-                            { label: t("next_class"), value: "18:30 Strength" },
+                            { label: t("next_class"), value: t("next_class_value") },
                             { label: t("payment_queue"), value: "14" },
                             { label: t("renewal_alerts"), value: "32" },
                         ].map((item) => (

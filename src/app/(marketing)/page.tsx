@@ -35,9 +35,9 @@ export default function LandingPage() {
   ];
 
   const operations = [
-    { label: t("next_class"), value: "18:30 Strength", tone: "text-accent" },
-    { label: t("payment_queue"), value: "14 pending", tone: "text-secondary" },
-    { label: t("renewal_alerts"), value: "32 members", tone: "text-primary" },
+    { label: t("next_class"), value: t("next_class_value"), tone: "text-primary" },
+    { label: t("payment_queue"), value: t("payment_queue_value"), tone: "text-primary" },
+    { label: t("renewal_alerts"), value: t("renewal_alerts_value"), tone: "text-primary" },
   ];
 
   return (
@@ -122,28 +122,28 @@ export default function LandingPage() {
           </div>
 
           <div className="surface-panel rounded-lg p-4">
-            <div className="mb-4 flex items-center justify-between border-b border-line pb-4">
+            <div className="mb-4 flex items-center justify-between border-b border-slate-200 pb-4">
               <div className="flex items-center gap-3">
-                <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-surface-muted text-primary">
+                <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-blue-50 text-blue-600">
                   <LayoutDashboard className="h-5 w-5" />
                 </div>
                 <div>
-                  <p className="text-sm font-semibold">{t("dashboard_label")}</p>
-                  <p className="text-xs text-muted">Apex Fitness / Bayangol</p>
+                  <p className="text-sm font-semibold text-slate-900">{t("dashboard_label")}</p>
+                  <p className="text-xs text-slate-500">Үндсэн салбар / Өнөөдөр</p>
                 </div>
               </div>
-              <span className="rounded-full bg-success/10 px-3 py-1 text-xs font-semibold text-success">
+              <span className="rounded-full bg-emerald-100 px-3 py-1 text-xs font-semibold text-emerald-700">
                 Live
               </span>
             </div>
 
             <div className="grid gap-3 sm:grid-cols-4">
               {metrics.map((metric) => (
-                <div key={metric.label} className="rounded-lg border border-line bg-surface-muted p-3">
-                  <p className="text-xs text-muted">{metric.label}</p>
+                <div key={metric.label} className="rounded-lg border border-slate-200 bg-slate-50 p-3">
+                  <p className="text-xs text-slate-500">{metric.label}</p>
                   <div className="mt-2 flex items-end justify-between gap-2">
-                    <span className="text-2xl font-semibold">{metric.value}</span>
-                    <span className="text-xs font-medium text-primary">{metric.detail}</span>
+                    <span className="text-2xl font-semibold text-slate-900">{metric.value}</span>
+                    <span className="text-xs font-medium text-slate-500">{metric.detail}</span>
                   </div>
                 </div>
               ))}
@@ -171,16 +171,16 @@ export default function LandingPage() {
                 </div>
               </div>
 
-              <div className="rounded-lg border border-line bg-surface p-4">
+              <div className="rounded-lg border border-slate-200 bg-white p-4">
                 <div className="flex items-center justify-between">
-                  <p className="text-sm font-semibold">{t("classes")}</p>
-                  <Dumbbell className="h-4 w-4 text-secondary" />
+                  <p className="text-sm font-semibold text-slate-900">Хичээлийн төлөв</p>
+                  <Dumbbell className="h-4 w-4 text-blue-600" />
                 </div>
                 <div className="mt-4 space-y-3">
                   {operations.map((item) => (
-                    <div key={item.label} className="flex items-center justify-between gap-3 border-b border-line pb-3 last:border-b-0 last:pb-0">
-                      <span className="text-xs text-muted">{item.label}</span>
-                      <span className={`text-sm font-semibold ${item.tone}`}>{item.value}</span>
+                    <div key={item.label} className="flex min-w-0 items-center justify-between gap-3 border-b border-slate-200 pb-3 last:border-b-0 last:pb-0">
+                      <span className="min-w-0 text-sm text-slate-500 font-normal whitespace-nowrap">{item.label}</span>
+                      <span className="min-w-0 text-sm font-semibold text-slate-900 whitespace-nowrap">{item.value}</span>
                     </div>
                   ))}
                 </div>
@@ -190,7 +190,7 @@ export default function LandingPage() {
             <div className="mt-3 flex items-center justify-between rounded-lg border border-line bg-surface p-4">
               <div>
                 <p className="text-sm font-semibold">{t("realtime_control")}</p>
-                <p className="mt-1 text-xs text-muted">Front desk, admin, and member portal stay in sync.</p>
+                <p className="mt-1 text-xs text-muted">Ресепшн, админ болон гишүүний порталын мэдээлэл бодит цагт нэгэн зэрэг шинэчлэгдэнэ.</p>
               </div>
               <BarChart3 className="h-5 w-5 text-accent" />
             </div>

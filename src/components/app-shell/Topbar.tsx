@@ -69,7 +69,7 @@ export default function Topbar({ slug }: { slug: string }) {
     const notifications = [
         { title: t("renewal_alerts"), detail: language === "ENG" ? "32 members need follow-up" : "32 гишүүнд сануулга илгээх" },
         { title: t("payment_queue"), detail: language === "ENG" ? "14 payments waiting for review" : "14 төлбөр шалгах дараалалд байна" },
-        { title: t("next_class"), detail: "18:30 Strength" },
+        { title: t("next_class"), detail: t("next_class_value") },
     ];
 
     return (

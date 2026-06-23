@@ -79,9 +79,6 @@ export default function LoginPage() {
                 <div className="mx-auto flex h-[72px] max-w-6xl items-center justify-between px-5">
                     <Link href="/" className="flex items-center gap-3">
                         <BrandLogo className="h-12 w-[150px]" priority />
-                        <div>
-                            <p className="mt-1 text-xs text-muted">{t("system_access")}</p>
-                        </div>
                     </Link>
                     <div className="flex items-center gap-2">
                         <LanguageSwitch />
@@ -99,7 +96,7 @@ export default function LoginPage() {
                         </div>
                         <h1 className="text-4xl font-semibold leading-tight">{t("enter_credentials")}</h1>
                         <p className="mt-5 text-base leading-8 text-muted">
-                            Admin, staff, and member access stay separated by role, while the organization data stays in one place.
+                            Админ, ажилтан, гишүүний эрх тусдаа, байгууллагын мэдээлэл нэг дор.
                         </p>
 
                         <div className="mt-8 space-y-3">

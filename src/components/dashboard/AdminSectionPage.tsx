@@ -263,7 +263,7 @@ const content: Record<"MGL" | "ENG", Record<SectionKey, SectionConfig>> = {
                 { key: "fill", label: "Дүүргэлт" },
             ],
             rows: [
-                { time: "18:30", className: "Strength", trainer: "Б. Түвшин", room: "A заал", fill: "21/24" },
+                { time: "18:30", className: "Сунгалт", trainer: "Б. Түвшин", room: "A заал", fill: "21/24" },
                 { time: "19:15", className: "Yoga Flow", trainer: "С. Мишээл", room: "B заал", fill: "16/20" },
                 { time: "20:00", className: "HIIT", trainer: "Д. Саруул", room: "A заал", fill: "24/24" },
             ],
@@ -297,7 +297,7 @@ const content: Record<"MGL" | "ENG", Record<SectionKey, SectionConfig>> = {
             ],
             rows: [
                 { time: "12:06", member: "Б. Анударь", type: "Нэвтрэлт", className: "Open gym", method: "QR" },
-                { time: "11:58", member: "Г. Тэмүүлэн", type: "Хичээл", className: "Strength", method: "QR" },
+                { time: "11:58", member: "Г. Тэмүүлэн", type: "Хичээл", className: "Сунгалт", method: "QR" },
                 { time: "11:44", member: "Э. Номин", type: "Нэвтрэлт", className: "Open gym", method: "Гараар" },
             ],
             sideItems: [
@@ -462,7 +462,7 @@ const content: Record<"MGL" | "ENG", Record<SectionKey, SectionConfig>> = {
                 { key: "fill", label: "Fill" },
             ],
             rows: [
-                { time: "18:30", className: "Strength", trainer: "B. Tuvshin", room: "Room A", fill: "21/24" },
+                { time: "18:30", className: "Сунгалт", trainer: "B. Tuvshin", room: "Room A", fill: "21/24" },
                 { time: "19:15", className: "Yoga Flow", trainer: "S. Misheel", room: "Room B", fill: "16/20" },
                 { time: "20:00", className: "HIIT", trainer: "D. Saruul", room: "Room A", fill: "24/24" },
             ],
@@ -496,7 +496,7 @@ const content: Record<"MGL" | "ENG", Record<SectionKey, SectionConfig>> = {
             ],
             rows: [
                 { time: "12:06", member: "B. Anudari", type: "Entry", className: "Open gym", method: "QR" },
-                { time: "11:58", member: "G. Temuulen", type: "Class", className: "Strength", method: "QR" },
+                { time: "11:58", member: "G. Temuulen", type: "Class", className: "Сунгалт", method: "QR" },
                 { time: "11:44", member: "E. Nomin", type: "Entry", className: "Open gym", method: "Manual" },
             ],
             sideItems: [

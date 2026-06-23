@@ -11,7 +11,7 @@
   --primary-foreground: #ffffff;
   --secondary: #9b4dca;
   --accent: #0f766e;
-  --success: #1f7a4d;
+  --success: #00d966;
   --warning: #a16207;
   --danger: #b42318;
 }
@@ -27,7 +27,7 @@
   --primary-foreground: #0f1115;
   --secondary: #c995f0;
   --accent: #5ec7bc;
-  --success: #74c69d;
+  --success: #5ec7bc;
   --warning: #f2c86b;
   --danger: #ff8a80;
 }
