@@ -1,4 +1,4 @@
-import { prisma } from "@/lib/prisma";
+import prisma from "@/lib/prisma";
 // Note: In a real app we'd use bcrypt and jose/jsonwebtoken
 // This service mocks the logic for the design showcase
 

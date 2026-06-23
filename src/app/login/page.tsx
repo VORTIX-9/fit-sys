@@ -4,30 +4,44 @@ import { loginUser } from "@/actions/login";
 import { useState } from "react";
 import Link from "next/link";
 import {
-    Building2,
-    Mail,
-    Lock,
+    AlertCircle,
     ArrowRight,
+    CheckCircle2,
+    Lock,
+    Mail,
     ShieldCheck,
     Smartphone,
-    User,
-    Phone,
-    AlertCircle
 } from "lucide-react";
 import { ThemeToggle } from "@/components/ui/ThemeToggle";
 import { LanguageSwitch } from "@/components/ui/LanguageSwitch";
 import { useLanguage } from "@/components/providers/LanguageProvider";
+import { BrandLogo } from "@/components/ui/BrandLogo";
 
 export default function LoginPage() {
     const { t } = useLanguage();
-    const [role, setRole] = useState<'ADMIN' | 'MEMBER' | 'STAFF' | null>(null);
+    const [role, setRole] = useState<"ADMIN" | "MEMBER" | "STAFF" | null>("ADMIN");
     const [formData, setFormData] = useState({ email: "", password: "" });
     const [error, setError] = useState("");
     const [isLoading, setIsLoading] = useState(false);
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        setFormData(prev => ({ ...prev, [e.target.name]: e.target.value }));
-        setError(""); // Clear error on input change
+        setFormData((prev) => ({ ...prev, [e.target.name]: e.target.value }));
+        setError("");
+    };
+
+    const getTenantUrl = (slug: string, route: string) => {
+        const { hostname, port, protocol, origin } = window.location;
+
+        if (hostname === "localhost" || hostname === "127.0.0.1" || hostname.endsWith(".localhost")) {
+            const localHost = hostname.endsWith(".localhost") ? "localhost" : hostname;
+            return `${protocol}//${localHost}${port ? `:${port}` : ""}/${slug}/app/${route}`;
+        }
+
+        if (hostname.endsWith(".fitsys.mn")) {
+            return `${protocol}//${slug}.fitsys.mn/app/${route}`;
+        }
+
+        return `${origin}/${slug}/app/${route}`;
     };
 
     const handleLogin = async () => {
@@ -38,151 +52,164 @@ export default function LoginPage() {
             const result = await loginUser(formData);
 
             if (result.success) {
-                // Redirect based on role
-                const hostname = window.location.hostname;
-                const port = window.location.port;
-                const protocol = window.location.protocol;
-
-                let redirectUrl = "";
-                const roleRoute = result.role === 'OWNER' || result.role === 'MANAGER' ? 'admin' : result.role?.toLowerCase();
-
-                if (hostname.includes('localhost')) {
-                    redirectUrl = `${protocol}//${result.orgSlug}.localhost${port ? `:${port}` : ''}/app/${roleRoute}`;
-                } else {
-                    redirectUrl = `${protocol}//${result.orgSlug}.fitsys.mn/app/${roleRoute}`;
+                if (!result.orgSlug) {
+                    setError("Байгууллагын мэдээлэл олдсонгүй");
+                    return;
                 }
 
-                window.location.href = redirectUrl;
+                const roleRoute = result.role === "OWNER" || result.role === "MANAGER"
+                    ? "admin"
+                    : result.role?.toLowerCase();
+
+                window.location.href = getTenantUrl(result.orgSlug, roleRoute || "admin");
             } else {
-                setError(result.error || "Нэвтрэх амжилтгүй боллоо");
+                setError(result.error || "Нэвтрэх мэдээлэл буруу байна");
             }
         } catch (error) {
             console.error(error);
-            setError("Алдаа гарлаа");
+            setError("Нэвтрэх үед алдаа гарлаа");
         } finally {
             setIsLoading(false);
         }
     };
 
     return (
-        <div className="min-h-screen bg-background flex items-center justify-center p-6 relative overflow-hidden">
-            <div className="absolute top-8 right-8 z-50 flex items-center gap-4">
-                <LanguageSwitch />
-                <ThemeToggle />
-            </div>
-
-            {/* Decorative Background */}
-            <div className="absolute top-0 left-0 w-full h-full pointer-events-none">
-                <div className="absolute top-[-10%] left-[20%] w-[30%] h-[30%] bg-primary/10 blur-[120px] rounded-full" />
-                <div className="absolute bottom-[-10%] right-[20%] w-[30%] h-[30%] bg-secondary/10 blur-[120px] rounded-full" />
-            </div>
-
-
-            <div className="w-full max-w-lg space-y-8 relative z-10 animate-in fade-in slide-in-from-bottom-4 duration-1000">
-                <header className="text-center space-y-4">
-                    <div className="inline-flex items-center gap-3 px-4 py-2 bg-foreground/5 border border-foreground/10 rounded-full mb-4">
-                        <ShieldCheck className="w-4 h-4 text-primary" />
-                        <span className="text-[10px] font-black text-foreground uppercase tracking-widest italic">{t('access_portal')}</span>
+        <div className="min-h-screen bg-background text-foreground">
+            <header className="border-b border-line bg-background/95">
+                <div className="mx-auto flex h-[72px] max-w-6xl items-center justify-between px-5">
+                    <Link href="/" className="flex items-center gap-3">
+                        <BrandLogo className="h-12 w-[150px]" priority />
+                        <div>
+                            <p className="mt-1 text-xs text-muted">{t("system_access")}</p>
+                        </div>
+                    </Link>
+                    <div className="flex items-center gap-2">
+                        <LanguageSwitch />
+                        <ThemeToggle />
                     </div>
-                    <h1 className="text-5xl font-black text-foreground italic tracking-tighter uppercase">
-                        fit<span className="text-primary">.sys</span>
-                    </h1>
+                </div>
+            </header>
 
-                    <p className="text-foreground/40 font-bold uppercase tracking-widest text-xs">{t('enter_credentials')}</p>
-                </header>
+            <main className="soft-grid mx-auto grid min-h-[calc(100vh-4.5rem)] max-w-6xl gap-8 px-5 py-10 lg:grid-cols-[0.9fr_1.1fr] lg:items-center">
+                <section className="hidden lg:block">
+                    <div className="max-w-md">
+                        <div className="mb-5 inline-flex items-center gap-2 rounded-full border border-line bg-surface px-3 py-1.5 text-sm text-muted">
+                            <ShieldCheck className="h-4 w-4 text-primary" />
+                            {t("access_portal")}
+                        </div>
+                        <h1 className="text-4xl font-semibold leading-tight">{t("enter_credentials")}</h1>
+                        <p className="mt-5 text-base leading-8 text-muted">
+                            Admin, staff, and member access stay separated by role, while the organization data stays in one place.
+                        </p>
 
-                <div className="glass p-10 rounded-[40px] border border-foreground/5 shadow-2xl space-y-10">
-                    {/* Role Quick Selector (Mock for visual guide) */}
-                    <div className="grid grid-cols-3 gap-3 p-1 bg-foreground/5 rounded-2xl">
-
-                        {(['ADMIN', 'STAFF', 'MEMBER'] as const).map(r => (
-                            <button
-                                key={r}
-                                onClick={() => setRole(r)}
-                                className={`py-2 rounded-xl text-[9px] font-black uppercase tracking-widest transition-all ${role === r ? 'bg-primary text-black' : 'text-foreground/30 hover:text-foreground'}`}>
-                                {t(r.toLowerCase())}
-                            </button>
-
-                        ))}
+                        <div className="mt-8 space-y-3">
+                            {[t("security_standard"), t("qpay_integrated"), t("local_support")].map((item) => (
+                                <div key={item} className="flex items-center gap-3 text-sm text-muted">
+                                    <CheckCircle2 className="h-4 w-4 text-success" />
+                                    {item}
+                                </div>
+                            ))}
+                        </div>
                     </div>
+                </section>
 
-                    <div className="space-y-6">
-                        <div className="space-y-2">
-                            <label className="text-[10px] font-black text-foreground/40 uppercase tracking-widest pl-2">{t('email')}</label>
-                            <div className="relative group">
-                                <Mail className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-foreground/20 group-focus-within:text-primary transition-colors" />
-                                <input
-                                    name="email"
-                                    value={formData.email}
-                                    onChange={handleChange}
-                                    type="text"
-                                    placeholder="admin@gym.mn"
-                                    className="w-full bg-foreground/[0.03] border border-foreground/10 rounded-2xl py-4 pl-12 pr-4 text-sm focus:outline-hidden focus:border-primary/40 transition-all font-medium text-foreground"
-                                />
-                            </div>
+                <section className="mx-auto w-full max-w-md">
+                    <div className="surface-panel rounded-lg p-6">
+                        <div className="mb-6">
+                            <p className="text-sm font-semibold text-primary">{t("access_portal")}</p>
+                            <h2 className="mt-2 text-2xl font-semibold">{t("login")}</h2>
+                            <p className="mt-2 text-sm text-muted">{t("enter_credentials")}</p>
                         </div>
 
-
-                        <div className="space-y-2">
-                            <div className="flex justify-between items-center px-2">
-                                <label className="text-[10px] font-black text-foreground/40 uppercase tracking-widest">{t('password')}</label>
-                                <button className="text-[9px] font-black text-primary/40 uppercase tracking-widest hover:text-primary transition-colors">{t('forgot_password')}</button>
-                            </div>
-                            <div className="relative group">
-                                <Lock className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-foreground/20 group-focus-within:text-primary transition-colors" />
-                                <input
-                                    name="password"
-                                    value={formData.password}
-                                    onChange={handleChange}
-                                    type="password"
-                                    placeholder="••••••••"
-                                    className="w-full bg-foreground/[0.03] border border-foreground/10 rounded-2xl py-4 pl-12 pr-4 text-sm focus:outline-hidden focus:border-primary/40 transition-all font-medium text-foreground"
-                                />
-                            </div>
+                        <div className="grid grid-cols-3 gap-1 rounded-lg border border-line bg-surface-muted p-1">
+                            {(["ADMIN", "STAFF", "MEMBER"] as const).map((item) => (
+                                <button
+                                    key={item}
+                                    type="button"
+                                    onClick={() => setRole(item)}
+                                    className={`h-9 rounded-md text-sm font-medium transition ${role === item
+                                        ? "bg-surface text-foreground shadow-sm"
+                                        : "text-muted hover:text-foreground"
+                                        }`}
+                                >
+                                    {t(item.toLowerCase())}
+                                </button>
+                            ))}
                         </div>
 
-                        {error && (
-                            <div className="flex items-center gap-3 p-4 bg-red-500/10 border border-red-500/20 rounded-2xl animate-in fade-in slide-in-from-top-2">
-                                <AlertCircle className="w-5 h-5 text-red-500 flex-shrink-0" />
-                                <p className="text-sm font-bold text-red-500">{error}</p>
+                        <div className="mt-6 space-y-4">
+                            <div>
+                                <label className="mb-2 block text-sm font-medium text-foreground">{t("email")}</label>
+                                <div className="relative">
+                                    <Mail className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted" />
+                                    <input
+                                        name="email"
+                                        value={formData.email}
+                                        onChange={handleChange}
+                                        type="email"
+                                        placeholder="admin@gym.mn"
+                                        className="input-field h-12 w-full rounded-lg pl-10 pr-3 text-sm transition"
+                                    />
+                                </div>
                             </div>
-                        )}
+
+                            <div>
+                                <div className="mb-2 flex items-center justify-between gap-3">
+                                    <label className="text-sm font-medium text-foreground">{t("password")}</label>
+                                    <button type="button" className="text-sm font-medium text-primary hover:underline">
+                                        {t("forgot_password")}
+                                    </button>
+                                </div>
+                                <div className="relative">
+                                    <Lock className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted" />
+                                    <input
+                                        name="password"
+                                        value={formData.password}
+                                        onChange={handleChange}
+                                        type="password"
+                                        placeholder="••••••••"
+                                        className="input-field h-12 w-full rounded-lg pl-10 pr-3 text-sm transition"
+                                    />
+                                </div>
+                            </div>
+
+                            {error && (
+                                <div className="flex items-start gap-3 rounded-lg border border-danger/30 bg-danger/10 p-3 text-sm text-danger">
+                                    <AlertCircle className="mt-0.5 h-4 w-4 shrink-0" />
+                                    <p>{error}</p>
+                                </div>
+                            )}
+                        </div>
+
+                        <button
+                            type="button"
+                            onClick={handleLogin}
+                            disabled={isLoading || !formData.email || !formData.password}
+                            className="button-primary mt-6 flex h-12 w-full items-center justify-center gap-2 rounded-lg text-sm font-semibold transition disabled:cursor-not-allowed disabled:opacity-50"
+                        >
+                            {isLoading ? "..." : t("login")}
+                            <ArrowRight className="h-4 w-4" />
+                        </button>
+
+                        <div className="my-6 h-px bg-line" />
+
+                        <button
+                            type="button"
+                            className="button-secondary flex h-12 w-full items-center justify-center gap-2 rounded-lg text-sm font-semibold transition"
+                        >
+                            <Smartphone className="h-4 w-4 text-primary" />
+                            {t("otp_sms")}
+                        </button>
                     </div>
 
-                    <button
-                        onClick={handleLogin}
-                        disabled={isLoading || !formData.email || !formData.password}
-                        className="w-full py-5 bg-primary text-black rounded-2xl text-[11px] font-black uppercase tracking-[0.2em] shadow-xl shadow-primary/20 hover:scale-[1.02] active:scale-95 transition-all flex items-center justify-center gap-3 disabled:opacity-50">
-                        {isLoading ? "..." : t('login')}
-                        <ArrowRight className="w-4 h-4" />
-                    </button>
-                </div>
-
-                <div className="space-y-4 pt-6 border-t border-white/5">
-                    <p className="text-center text-[9px] font-black text-foreground/20 uppercase tracking-widest">{t('or_continue_with')}</p>
-                    <button className="w-full py-4 glass rounded-2xl flex items-center justify-center gap-3 text-[10px] font-black uppercase tracking-widest hover:bg-white/10 transition-all">
-                        <Smartphone className="w-4 h-4 text-primary" />
-                        {t('otp_sms')}
-                    </button>
-                </div>
-            </div>
-
-            <p className="text-center text-[10px] font-bold text-foreground/30 uppercase tracking-[0.2em] italic">
-                {t('no_account')} <Link href="/signup" className="text-foreground hover:text-primary underline underline-offset-4 transition-colors">{t('signup')}</Link>
-            </p>
-
-
-            {/* Footer Meta */}
-            <div className="flex justify-center items-center gap-6 pt-8 opacity-20">
-                <div className="flex items-center gap-2">
-                    <div className="w-1 h-1 bg-white rounded-full" />
-                    <span className="text-[8px] font-bold uppercase tracking-widest">{t('security_standard')}</span>
-                </div>
-                <div className="flex items-center gap-2">
-                    <div className="w-1 h-1 bg-white rounded-full" />
-                    <span className="text-[8px] font-bold uppercase tracking-widest">{t('local_hosting')}</span>
-                </div>
-            </div>
+                    <p className="mt-5 text-center text-sm text-muted">
+                        {t("no_account")}{" "}
+                        <Link href="/signup" className="font-semibold text-primary hover:underline">
+                            {t("signup")}
+                        </Link>
+                    </p>
+                </section>
+            </main>
         </div>
     );
 }

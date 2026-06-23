@@ -1,5 +1,5 @@
-import { prisma } from "@/lib/prisma";
-import { OrgStatus, PlanTier } from "@prisma/client";
+import prisma from "@/lib/prisma";
+import { OrgStatus, Prisma } from "@prisma/client";
 
 export class OrganizationService {
     /**
@@ -64,7 +64,7 @@ export class OrganizationService {
     /**
      * Update branding and settings
      */
-    static async updateSettings(id: string, brandingConfig: any) {
+    static async updateSettings(id: string, brandingConfig: Prisma.InputJsonValue) {
         return await prisma.organization.update({
             where: { id },
             data: {

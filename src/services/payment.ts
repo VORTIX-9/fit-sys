@@ -1,5 +1,5 @@
-import { prisma } from "@/lib/prisma";
-import { PaymentStatus, SubscriptionStatus } from "@prisma/client";
+import prisma from "@/lib/prisma";
+import { PaymentMethod, PaymentStatus, SubscriptionStatus } from "@prisma/client";
 
 export class PaymentService {
     /**
@@ -10,7 +10,7 @@ export class PaymentService {
         organizationId: string;
         subscriptionId: string;
         amount: number;
-        method: any;
+        method: PaymentMethod;
         externalRef?: string;
     }) {
         return await prisma.payment.create({

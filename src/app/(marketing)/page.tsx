@@ -2,118 +2,252 @@
 
 import Link from "next/link";
 import {
-  Dumbbell,
-  Users,
-  CreditCard,
-  Calendar,
-  CheckCircle,
   ArrowRight,
+  BarChart3,
+  CalendarCheck,
+  CheckCircle2,
+  CreditCard,
+  Dumbbell,
+  LayoutDashboard,
+  ScanLine,
   ShieldCheck,
-  TrendingUp,
-  Layout
+  Users,
 } from "lucide-react";
 import { ThemeToggle } from "@/components/ui/ThemeToggle";
 import { LanguageSwitch } from "@/components/ui/LanguageSwitch";
 import { useLanguage } from "@/components/providers/LanguageProvider";
+import { BrandLogo } from "@/components/ui/BrandLogo";
 
 export default function LandingPage() {
   const { t } = useLanguage();
 
+  const metrics = [
+    { label: t("active_members"), value: "1,284", detail: "+48" },
+    { label: t("today_revenue"), value: "3.8M", detail: "MNT" },
+    { label: t("checkins_today"), value: "216", detail: "QR" },
+    { label: t("class_fill"), value: "82%", detail: "live" },
+  ];
+
+  const benefits = [
+    { title: t("benefit_1_title"), desc: t("benefit_1_desc"), icon: Users },
+    { title: t("benefit_2_title"), desc: t("benefit_2_desc"), icon: CreditCard },
+    { title: t("benefit_3_title"), desc: t("benefit_3_desc"), icon: CalendarCheck },
+  ];
+
+  const operations = [
+    { label: t("next_class"), value: "18:30 Strength", tone: "text-accent" },
+    { label: t("payment_queue"), value: "14 pending", tone: "text-secondary" },
+    { label: t("renewal_alerts"), value: "32 members", tone: "text-primary" },
+  ];
+
   return (
-    <div className="min-h-screen bg-background text-foreground overflow-hidden">
-      {/* Navigation */}
-      <nav className="fixed top-0 w-full z-100 glass border-b border-foreground/5 px-8 py-4 flex items-center justify-between">
-        <div className="flex items-center gap-3">
-          <div className="w-10 h-10 bg-primary rounded-xl flex items-center justify-center font-black text-black">F</div>
-          <span className="font-black text-xl italic tracking-tighter uppercase text-foreground">fit.sys</span>
-        </div>
-        <div className="hidden md:flex items-center gap-6">
-          {[t('features'), t('pricing'), t('contact')].map(item => (
-            <Link key={item} href="#" className="text-[10px] font-black uppercase tracking-widest text-foreground/40 hover:text-foreground transition-colors">{item}</Link>
-          ))}
-          <div className="flex items-center gap-3 border-l border-foreground/10 pl-6">
-            <LanguageSwitch />
-            <ThemeToggle />
-          </div>
-          <Link href="/login" className="px-6 py-2.5 glass rounded-xl text-[10px] font-black uppercase tracking-widest hover:bg-foreground/5 transition-all">{t('login')}</Link>
-        </div>
-      </nav>
+    <div className="min-h-screen overflow-hidden bg-background text-foreground">
+      <header className="sticky top-0 z-50 border-b border-line bg-background/95 backdrop-blur">
+        <nav className="mx-auto flex h-[72px] max-w-7xl items-center justify-between px-5">
+          <Link href="/" className="flex items-center gap-3" aria-label="fit.sys home">
+            <BrandLogo className="h-12 w-[150px]" priority />
+          </Link>
 
-      <main className="pt-32 pb-20 px-8 max-w-7xl mx-auto space-y-32">
-        {/* Hero Section */}
-        <section className="text-center space-y-8 relative">
-          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[300px] bg-primary/5 blur-[120px] rounded-full pointer-events-none" />
-
-          <div className="inline-flex items-center gap-3 px-4 py-2 bg-foreground/5 border border-foreground/10 rounded-full animate-in fade-in slide-in-from-bottom-2 duration-700">
-            <ShieldCheck className="w-4 h-4 text-primary" />
-            <span className="text-[10px] font-black text-foreground uppercase tracking-widest italic">All-in-One Gym OS</span>
+          <div className="hidden items-center gap-7 md:flex">
+            <Link href="#features" className="text-sm font-medium text-muted transition hover:text-foreground">
+              {t("features")}
+            </Link>
+            <Link href="#pricing" className="text-sm font-medium text-muted transition hover:text-foreground">
+              {t("pricing")}
+            </Link>
+            <Link href="#contact" className="text-sm font-medium text-muted transition hover:text-foreground">
+              {t("contact")}
+            </Link>
           </div>
 
-          <h1 className="text-6xl md:text-8xl font-black text-foreground italic tracking-tighter uppercase leading-[0.9] animate-in fade-in slide-in-from-bottom-4 duration-1000">
-            {t('hero_title')}
-          </h1>
-
-          <p className="max-w-xl mx-auto text-sm md:text-lg text-foreground/40 font-medium leading-relaxed">
-            {t('hero_subtitle')}
-          </p>
-
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-4 pt-4">
-            <Link href="/signup" className="w-full sm:w-auto px-10 py-5 bg-primary text-black rounded-2xl text-[11px] font-black uppercase tracking-[0.2em] shadow-xl shadow-primary/20 hover:scale-[1.05] active:scale-95 transition-all flex items-center justify-center gap-3">
-              {t('try_free')}
-              <ArrowRight className="w-4 h-4" />
+          <div className="flex items-center gap-2">
+            <div className="hidden items-center gap-2 sm:flex">
+              <LanguageSwitch />
+              <ThemeToggle />
+            </div>
+            <Link
+              href="/login"
+              className="button-secondary inline-flex h-10 items-center justify-center rounded-lg px-4 text-sm font-semibold transition"
+            >
+              {t("login")}
             </Link>
-            <Link href="/login" className="w-full sm:w-auto px-10 py-5 glass rounded-2xl text-[11px] font-black uppercase tracking-[0.2em] hover:bg-foreground/5 transition-all">
-              {t('login')}
-            </Link>
+          </div>
+        </nav>
+      </header>
+
+      <main className="soft-grid">
+        <section className="mx-auto grid max-w-7xl gap-12 px-5 py-12 lg:grid-cols-[0.9fr_1.1fr] lg:items-center">
+          <div className="max-w-2xl">
+            <div className="mb-6 inline-flex items-center gap-2 rounded-full border border-line bg-surface px-3 py-1.5 text-sm font-medium text-muted">
+              <ShieldCheck className="h-4 w-4 text-primary" />
+              {t("hero_kicker")}
+            </div>
+
+            <h1 className="text-4xl font-semibold leading-tight text-foreground">
+              {t("hero_title")}
+            </h1>
+
+            <p className="mt-5 text-base leading-8 text-muted">
+              {t("hero_subtitle")}
+            </p>
+
+            <div className="mt-8 flex flex-col gap-3 sm:flex-row">
+              <Link
+                href="/signup"
+                className="button-primary inline-flex h-12 items-center justify-center gap-2 rounded-lg px-5 text-sm font-semibold transition active:scale-[0.98]"
+              >
+                {t("try_free")}
+                <ArrowRight className="h-4 w-4" />
+              </Link>
+              <Link
+                href="/login"
+                className="button-secondary inline-flex h-12 items-center justify-center rounded-lg px-5 text-sm font-semibold transition"
+              >
+                {t("system_access")}
+              </Link>
+            </div>
+
+            <div className="mt-10 grid gap-3 sm:grid-cols-3">
+              {[
+                t("unlimited_members"),
+                t("qpay_integrated"),
+                t("local_support"),
+              ].map((item) => (
+                <div key={item} className="flex items-center gap-2 text-sm text-muted">
+                  <CheckCircle2 className="h-4 w-4 text-success" />
+                  <span>{item}</span>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          <div className="surface-panel rounded-lg p-4">
+            <div className="mb-4 flex items-center justify-between border-b border-line pb-4">
+              <div className="flex items-center gap-3">
+                <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-surface-muted text-primary">
+                  <LayoutDashboard className="h-5 w-5" />
+                </div>
+                <div>
+                  <p className="text-sm font-semibold">{t("dashboard_label")}</p>
+                  <p className="text-xs text-muted">Apex Fitness / Bayangol</p>
+                </div>
+              </div>
+              <span className="rounded-full bg-success/10 px-3 py-1 text-xs font-semibold text-success">
+                Live
+              </span>
+            </div>
+
+            <div className="grid gap-3 sm:grid-cols-4">
+              {metrics.map((metric) => (
+                <div key={metric.label} className="rounded-lg border border-line bg-surface-muted p-3">
+                  <p className="text-xs text-muted">{metric.label}</p>
+                  <div className="mt-2 flex items-end justify-between gap-2">
+                    <span className="text-2xl font-semibold">{metric.value}</span>
+                    <span className="text-xs font-medium text-primary">{metric.detail}</span>
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            <div className="mt-3 grid gap-3 lg:grid-cols-[1.15fr_0.85fr]">
+              <div className="rounded-lg border border-line bg-surface p-4">
+                <div className="flex items-center justify-between">
+                  <p className="text-sm font-semibold">{t("attendance")}</p>
+                  <ScanLine className="h-4 w-4 text-primary" />
+                </div>
+                <div className="mt-5 space-y-3">
+                  {["06:00", "09:00", "12:00", "15:00", "18:00"].map((time, index) => (
+                    <div key={time} className="grid grid-cols-[52px_1fr_42px] items-center gap-3">
+                      <span className="text-xs text-muted">{time}</span>
+                      <div className="h-2 rounded-full bg-surface-muted">
+                        <div
+                          className="h-2 rounded-full bg-primary"
+                          style={{ width: `${42 + index * 11}%` }}
+                        />
+                      </div>
+                      <span className="text-right text-xs font-medium text-muted">{42 + index * 11}%</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              <div className="rounded-lg border border-line bg-surface p-4">
+                <div className="flex items-center justify-between">
+                  <p className="text-sm font-semibold">{t("classes")}</p>
+                  <Dumbbell className="h-4 w-4 text-secondary" />
+                </div>
+                <div className="mt-4 space-y-3">
+                  {operations.map((item) => (
+                    <div key={item.label} className="flex items-center justify-between gap-3 border-b border-line pb-3 last:border-b-0 last:pb-0">
+                      <span className="text-xs text-muted">{item.label}</span>
+                      <span className={`text-sm font-semibold ${item.tone}`}>{item.value}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+
+            <div className="mt-3 flex items-center justify-between rounded-lg border border-line bg-surface p-4">
+              <div>
+                <p className="text-sm font-semibold">{t("realtime_control")}</p>
+                <p className="mt-1 text-xs text-muted">Front desk, admin, and member portal stay in sync.</p>
+              </div>
+              <BarChart3 className="h-5 w-5 text-accent" />
+            </div>
           </div>
         </section>
 
-        {/* Benefits Grid */}
-        <section className="grid grid-cols-1 md:grid-cols-3 gap-8">
+        <section id="features" className="border-y border-line bg-surface/80">
+          <div className="mx-auto grid max-w-7xl gap-6 px-5 py-12 lg:grid-cols-[0.7fr_1.3fr]">
+            <div>
+              <p className="text-sm font-semibold text-primary">{t("growth_engine")}</p>
+              <h2 className="mt-3 text-3xl font-semibold leading-tight">{t("trust_title")}</h2>
+              <p className="mt-4 max-w-md text-sm leading-7 text-muted">{t("trust_desc")}</p>
+            </div>
+
+            <div className="grid gap-4 md:grid-cols-3">
+              {benefits.map((benefit) => (
+                <article key={benefit.title} className="surface-panel rounded-lg p-5">
+                  <benefit.icon className="h-5 w-5 text-primary" />
+                  <h3 className="mt-5 text-lg font-semibold">{benefit.title}</h3>
+                  <p className="mt-3 text-sm leading-6 text-muted">{benefit.desc}</p>
+                </article>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        <section id="pricing" className="mx-auto grid max-w-7xl gap-6 px-5 py-12 lg:grid-cols-3">
           {[
-            { title: t('benefit_1_title'), desc: t('benefit_1_desc'), icon: Users, color: "text-blue-400" },
-            { title: t('benefit_2_title'), desc: t('benefit_2_desc'), icon: CreditCard, color: "text-primary" },
-            { title: t('benefit_3_title'), desc: t('benefit_3_desc'), icon: Calendar, color: "text-secondary" }
-          ].map((benefit, i) => (
-            <div key={i} className="glass p-10 rounded-[40px] border border-foreground/5 space-y-6 hover:border-primary/20 transition-all group">
-              <div className={`p-4 rounded-2xl bg-foreground/5 w-fit ${benefit.color}`}>
-                <benefit.icon className="w-8 h-8 group-hover:scale-110 transition-transform" />
+            { label: t("realtime_control"), value: "Admin", icon: LayoutDashboard },
+            { label: t("qr_attendance"), value: "Staff", icon: ScanLine },
+            { label: t("system_access"), value: "Member", icon: Users },
+          ].map((item) => (
+            <div key={item.label} className="flex items-center justify-between rounded-lg border border-line bg-surface p-5">
+              <div>
+                <p className="text-sm text-muted">{item.value}</p>
+                <p className="mt-1 font-semibold">{item.label}</p>
               </div>
-              <h3 className="text-xl font-black text-foreground italic uppercase tracking-tight">{benefit.title}</h3>
-              <p className="text-sm text-foreground/40 font-medium leading-relaxed">{benefit.desc}</p>
+              <item.icon className="h-5 w-5 text-primary" />
             </div>
           ))}
-        </section>
-
-        {/* Dynamic Trust Section */}
-        <section className="glass rounded-[50px] p-12 flex flex-col md:flex-row items-center justify-between gap-12 border border-foreground/5 relative overflow-hidden group">
-          <div className="absolute top-0 right-0 w-64 h-64 bg-primary/5 blur-[80px] rounded-full" />
-          <div className="space-y-4 max-w-md">
-            <div className="flex items-center gap-2">
-              <TrendingUp className="w-5 h-5 text-primary" />
-              <span className="text-[10px] font-black text-primary uppercase tracking-widest">{t('growth_engine')}</span>
-            </div>
-            <h2 className="text-4xl font-black text-foreground italic uppercase tracking-tighter">{t('trust_title')}</h2>
-            <p className="text-xs text-foreground/40 font-medium leading-relaxed">{t('trust_desc')}</p>
-          </div>
-
-          <div className="grid grid-cols-2 gap-4 w-full md:w-auto">
-            {[
-              { label: t('realtime_control'), icon: Layout },
-              { label: t('qr_attendance'), icon: CheckCircle }
-            ].map((item, i) => (
-              <div key={i} className="p-6 bg-foreground/5 border border-foreground/10 rounded-3xl flex flex-col items-center text-center gap-4 group-hover:bg-foreground/10 transition-all">
-                <item.icon className="w-6 h-6 text-primary" />
-                <span className="text-[9px] font-black text-foreground uppercase tracking-widest">{item.label}</span>
-              </div>
-            ))}
-          </div>
         </section>
       </main>
 
-      {/* Footer */}
-      <footer className="px-8 py-12 border-t border-foreground/5 text-center space-y-4 opacity-50">
-        <p className="text-[10px] font-black uppercase tracking-[0.3em] text-foreground/40 italic">© 2024 fit.sys — Powered by Antigravity</p>
+      <footer id="contact" className="border-t border-line bg-surface">
+        <div className="mx-auto flex max-w-7xl flex-col gap-4 px-5 py-8 sm:flex-row sm:items-center sm:justify-between">
+          <div>
+            <BrandLogo className="h-12 w-[150px]" />
+            <p className="mt-1 text-sm text-muted">Fitness operations platform for Mongolia.</p>
+          </div>
+          <Link
+            href="/signup"
+            className="button-primary inline-flex h-11 items-center justify-center gap-2 rounded-lg px-4 text-sm font-semibold transition"
+          >
+            {t("try_free")}
+            <ArrowRight className="h-4 w-4" />
+          </Link>
+        </div>
       </footer>
     </div>
   );

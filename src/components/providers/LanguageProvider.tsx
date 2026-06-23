@@ -1,6 +1,6 @@
 "use client";
 
-import React, { createContext, useContext, useState, useEffect } from "react";
+import React, { createContext, useContext, useState } from "react";
 
 type Language = "MGL" | "ENG";
 
@@ -12,18 +12,17 @@ interface LanguageContextType {
 
 const dictionaries: Record<Language, Record<string, string>> = {
     MGL: {
-        // Navigation & General
-        dashboard: "Хяналт",
+        dashboard: "Хяналтын самбар",
         members: "Гишүүд",
         payments: "Төлбөр",
         classes: "Хичээл",
         settings: "Тохиргоо",
         logout: "Гарах",
-        search: "Ухаалаг хайлт...",
+        search: "Гишүүн, төлбөр, захиалга хайх",
         notifications: "Мэдэгдэл",
-        gym_registration: "Gym бүртгэл",
+        gym_registration: "Байгууллага бүртгэх",
         unified_access: "Нэгдсэн нэвтрэх",
-        staff_desk: "Staff ширээ",
+        staff_desk: "Ажилтны хэсэг",
         theme_light: "Гэгээлэг",
         theme_dark: "Харанхуй",
         home: "Нүүр",
@@ -33,73 +32,86 @@ const dictionaries: Record<Language, Record<string, string>> = {
         save: "Хадгалах",
         cancel: "Цуцлах",
 
-        // Auth Pages
         login: "Нэвтрэх",
         signup: "Бүртгүүлэх",
         email: "Имэйл хаяг",
         password: "Нууц үг",
         forgot_password: "Нууц үг мартсан?",
-        access_portal: "Нэгдсэн нэвтрэх портал",
-        enter_credentials: "Нэвтрэх мэдээллээ оруулна уу",
+        access_portal: "fit.sys нэвтрэх",
+        enter_credentials: "Байгууллагын эрхээрээ нэвтэрнэ үү",
         start_legacy: "Фитнес төвөө бүртгүүлэх",
-        register_org: "Байгууллагаа 2 минутанд бүртгүүл",
+        register_org: "Тохиргоог богино хугацаанд дуусгаад шууд ашиглаж эхэл",
         org_profile: "Байгууллагын мэдээлэл",
-        admin_setup: "Админ тохиргоо",
-        gym_name: "Гим-ийн нэр",
-        subdomain: "Дэд домайн хаяг",
+        admin_setup: "Админ хэрэглэгч",
+        gym_name: "Фитнес төвийн нэр",
+        subdomain: "Дэд домайн",
         full_name: "Бүтэн нэр",
         phone: "Утасны дугаар",
         already_account: "Бүртгэлтэй юу?",
         no_account: "Бүртгэлгүй юу?",
 
-        // Marketing
-        hero_title: "Монголын фитнес төвүүдэд зориулсан удирдлагын систем",
-        hero_subtitle: "Гишүүнчлэлийн бүртгэл, төлбөр тооцоо, хичээл захиалгыг нэг дороос удирдах Монголын анхны иж бүрэн SaaS систем.",
-        try_free: "Үнэгүй турших",
-        features: "Үйлчилгээ",
-        pricing: "Үнэ",
-        contact: "Холбоо барих",
+        hero_kicker: "Фитнес төвийн өдөр тутмын үйл ажиллагаа",
+        hero_title: "Фитнес төвөө нэг самбараас удирд",
+        hero_subtitle: "Гишүүнчлэл, төлбөр, ирц, хуваарь, ажилтны ажлыг нэг системд төвлөрүүлсэн fit.sys нь жижиг студиэс олон салбартай фитнес хүртэл өдөр тутам ашиглахад зориулагдсан.",
+        try_free: "Демо эхлүүлэх",
+        features: "Боломжууд",
+        pricing: "Тариф",
+        contact: "Зөвлөгөө авах",
 
-        benefit_1_title: "Гишүүнчлэл автоматаар",
-        benefit_1_desc: "Хугацаа дуусах дөхсөн гишүүдэд автоматаар мэдэгдэх, эрхийг нь сунгах үйл явцыг хурдасгана.",
+        benefit_1_title: "Гишүүнчлэлийн бүртгэл",
+        benefit_1_desc: "Шинэ гишүүн нэмэх, хугацаа сунгах, эрхийн төлөв харах үйлдлүүд нэг урсгалд багтана.",
         benefit_2_title: "Төлбөрийн хяналт",
-        benefit_2_desc: "Дансны хуулга, бэлэн мөнгө, QPay төлбөрүүдийг нэгдсэн системээр тулгаж, тайлангаа нэг товшоод ав.",
-        benefit_3_title: "Хичээл, цагийн бүртгэл",
-        benefit_3_desc: "Багш нарын хуваарь, заалны дүүргэлтийг хянаж, гишүүд өөрсдөө цагаа захиалах боломжтой.",
+        benefit_2_desc: "QPay, бэлэн мөнгө, дансны шилжүүлгийг ялгаж, өдрийн орлого болон үлдэгдлийг тодорхой харуулна.",
+        benefit_3_title: "Хичээл, ирц",
+        benefit_3_desc: "Багшийн хуваарь, заалны багтаамж, QR ирцийг админ болон ажилтны дэлгэцээс удирдана.",
 
-        trust_title: "Орлогоо 25% болтол өсгө",
-        trust_desc: "Систем ашигласнаар хүний хүчин зүйлээс шалтгаалсан алдааг арилгаж, гишүүдийн сэтгэл ханамжийг нэмэгдүүлнэ.",
-        growth_engine: "Өсөлтийн хөдөлгүүр",
-        realtime_control: "Бодит цагийн хяналт",
-        qr_attendance: "Ирц бүртгэл (QR)",
+        trust_title: "Өдөр тутмын ажиллагаа эмхтэй болно",
+        trust_desc: "Админ, ажилтан, гишүүний хэсэг тусдаа боловч нэг өгөгдөл дээр ажилладаг тул давхар бүртгэл, алдаатай тайлан багасна.",
+        growth_engine: "Операторын хяналт",
+        realtime_control: "Бодит цагийн төлөв",
+        qr_attendance: "QR ирц",
 
         portal: "Портал",
         collapse: "Хураах",
         attendance: "Ирц",
         system_access: "Системд нэвтрэх",
-        or_continue_with: "Эсвэл дараах сонголтоор",
-        otp_sms: "SMS-ээр нэг удаагийн код авах",
-        security_standard: "Хамгаалалт 256-бит",
-        local_hosting: "Монгол дахь сервер",
+        or_continue_with: "Эсвэл дараах аргаар",
+        otp_sms: "SMS кодоор нэвтрэх",
+        security_standard: "Эрхийн түвшинтэй",
+        local_hosting: "Монголд ашиглахад бэлэн",
         admin: "Админ",
         staff: "Ажилтан",
         member: "Гишүүн",
-        subdomain_hint: "Энэ нь таны өөрийн хаяг болох юм (ж.нь: apex.fitsys.mn)",
-        unlimited_members: "Хязгааргүй гишүүд",
-        qpay_integrated: "QPay холбогдсон",
-        local_support: "Орон нутгийн тусламж",
+        subdomain_hint: "Жишээ: apex.fitsys.mn",
+        unlimited_members: "Гишүүний бүртгэл",
+        qpay_integrated: "QPay төлбөр",
+        local_support: "Монгол хэлтэй дэмжлэг",
+
+        dashboard_label: "Өнөөдрийн төлөв",
+        active_members: "Идэвхтэй гишүүд",
+        today_revenue: "Өдрийн орлого",
+        checkins_today: "Өнөөдрийн ирц",
+        class_fill: "Хичээлийн дүүргэлт",
+        next_class: "Дараагийн хичээл",
+        payment_queue: "Төлбөр шалгах",
+        renewal_alerts: "Сунгалтын сануулга",
+        setup_title: "Эхлэх тохиргоогоо дуусгаарай",
+        setup_desc: "Эдгээр тохиргоог хийснээр гишүүн бүртгэх, төлбөр авах, ирц шалгах үндсэн урсгал бэлэн болно.",
+        setup_plans: "Гишүүнчлэлийн төлөвлөгөө үүсгэх",
+        setup_members: "Эхний гишүүнээ нэмэх",
+        setup_payments: "Төлбөрийн арга холбох",
+        setup_schedule: "Хичээлийн хуваарь гаргах",
     },
     ENG: {
-        // Navigation & General
         dashboard: "Dashboard",
         members: "Members",
         payments: "Payments",
         classes: "Classes",
         settings: "Settings",
         logout: "Logout",
-        search: "Smart Search...",
+        search: "Search members, payments, bookings",
         notifications: "Notifications",
-        gym_registration: "Gym Registration",
+        gym_registration: "Register Organization",
         unified_access: "Unified Access",
         staff_desk: "Staff Desk",
         theme_light: "Light",
@@ -111,61 +123,75 @@ const dictionaries: Record<Language, Record<string, string>> = {
         save: "Save",
         cancel: "Cancel",
 
-        // Auth Pages
-        login: "Login",
+        login: "Log In",
         signup: "Sign Up",
         email: "Email Address",
         password: "Password",
-        forgot_password: "Forgot Password?",
-        access_portal: "Unified Access Portal",
-        enter_credentials: "Enter your credentials to continue",
-        start_legacy: "Start Your Gym Legacy",
-        register_org: "Register your organization in 2 minutes",
-        org_profile: "Organization Profile",
-        admin_setup: "Admin Setup",
-        gym_name: "Gym Name",
-        subdomain: "Desired Subdomain",
+        forgot_password: "Forgot password?",
+        access_portal: "fit.sys access",
+        enter_credentials: "Sign in with your organization account",
+        start_legacy: "Register Your Fitness Center",
+        register_org: "Finish setup quickly and start operating",
+        org_profile: "Organization Details",
+        admin_setup: "Admin User",
+        gym_name: "Fitness Center Name",
+        subdomain: "Subdomain",
         full_name: "Full Name",
         phone: "Phone Number",
         already_account: "Already have an account?",
-        no_account: "Don't have a gym account?",
+        no_account: "No account yet?",
 
-        // Marketing
-        hero_title: "Next-Gen Fitness Management for Mongolia",
-        hero_subtitle: "All-in-one SaaS platform for membership management, payments, and class bookings tailored for the local market.",
-        try_free: "Try for Free",
+        hero_kicker: "Daily operations for fitness teams",
+        hero_title: "Run your fitness center from one dashboard",
+        hero_subtitle: "fit.sys brings memberships, payments, attendance, class schedules, and staff workflows into one focused system for studios, gyms, and multi-location fitness teams.",
+        try_free: "Start Demo",
         features: "Features",
-        pricing: "Pricing",
-        contact: "Contact",
+        pricing: "Plans",
+        contact: "Talk to Us",
 
-        benefit_1_title: "Automated Membership",
-        benefit_1_desc: "Automatically notify members nearing expiration and accelerate the renewal process.",
+        benefit_1_title: "Membership Records",
+        benefit_1_desc: "Create members, extend plans, and see access status inside one clear workflow.",
         benefit_2_title: "Payment Control",
-        benefit_2_desc: "Reconcile bank statements, cash, and QPay payments through a unified system and get reports with one click.",
-        benefit_3_title: "Class & Schedule",
-        benefit_3_desc: "Monitor instructor schedules and facility occupancy, allowing members to book their own slots.",
+        benefit_2_desc: "Track QPay, cash, and bank transfers with daily revenue and pending balances in view.",
+        benefit_3_title: "Classes & Attendance",
+        benefit_3_desc: "Manage instructor schedules, room capacity, and QR check-ins from admin and staff screens.",
 
-        trust_title: "Boost Revenue up to 25%",
-        trust_desc: "Eliminate human errors and increase member satisfaction by implementing a professional management system.",
-        growth_engine: "Growth Engine",
-        realtime_control: "Real-time Control",
-        qr_attendance: "QR Attendance",
+        trust_title: "Cleaner day-to-day operations",
+        trust_desc: "Admin, staff, and member portals stay separate while working from the same data, reducing duplicate entry and messy reporting.",
+        growth_engine: "Operator Control",
+        realtime_control: "Live Status",
+        qr_attendance: "QR Check-in",
 
         portal: "Portal",
         collapse: "Collapse",
         attendance: "Attendance",
         system_access: "System Access",
         or_continue_with: "Or continue with",
-        otp_sms: "OTP via SMS",
-        security_standard: "Security 256-bit",
-        local_hosting: "Mongolia Hosted",
+        otp_sms: "Sign in with SMS code",
+        security_standard: "Role-based access",
+        local_hosting: "Ready for Mongolia",
         admin: "Admin",
         staff: "Staff",
         member: "Member",
-        subdomain_hint: "This will be your unique address (e.g. apex.fitsys.mn)",
-        unlimited_members: "Unlimited Members",
-        qpay_integrated: "QPay Integrated",
-        local_support: "Local Support",
+        subdomain_hint: "Example: apex.fitsys.mn",
+        unlimited_members: "Member records",
+        qpay_integrated: "QPay payments",
+        local_support: "Mongolian support",
+
+        dashboard_label: "Today's Snapshot",
+        active_members: "Active Members",
+        today_revenue: "Today Revenue",
+        checkins_today: "Check-ins Today",
+        class_fill: "Class Fill",
+        next_class: "Next Class",
+        payment_queue: "Payments to Review",
+        renewal_alerts: "Renewal Alerts",
+        setup_title: "Finish Your Launch Setup",
+        setup_desc: "Complete these items to make member registration, payment collection, and attendance checks ready for daily use.",
+        setup_plans: "Create membership plans",
+        setup_members: "Add your first member",
+        setup_payments: "Connect payment methods",
+        setup_schedule: "Publish class schedule",
     },
 };
 
@@ -174,9 +200,7 @@ const LanguageContext = createContext<LanguageContextType | undefined>(undefined
 export function LanguageProvider({ children }: { children: React.ReactNode }) {
     const [language, setLanguage] = useState<Language>("MGL");
 
-    const t = (key: string) => {
-        return dictionaries[language][key] || key;
-    };
+    const t = (key: string) => dictionaries[language][key] || key;
 
     return (
         <LanguageContext.Provider value={{ language, setLanguage, t }}>
@@ -187,8 +211,10 @@ export function LanguageProvider({ children }: { children: React.ReactNode }) {
 
 export function useLanguage() {
     const context = useContext(LanguageContext);
+
     if (context === undefined) {
         throw new Error("useLanguage must be used within a LanguageProvider");
     }
+
     return context;
 }

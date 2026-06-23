@@ -9,15 +9,11 @@ export default function AppShell({
     slug: string;
 }) {
     return (
-        <div className="min-h-screen bg-background text-foreground flex">
+        <div className="flex min-h-screen bg-background text-foreground">
             <Sidebar slug={slug} />
-
-            {/* Main Content Area */}
-            {/* Margin left matches sidebar width (default 64) */}
-            <div className="flex-1 flex flex-col ml-64 transition-all duration-300">
+            <div className="ml-60 flex flex-1 flex-col transition-all duration-300">
                 <Topbar slug={slug} />
-
-                <main className="p-8 animate-in fade-in slide-in-from-bottom-2 duration-700">
+                <main className="min-h-[calc(100vh-4rem)] p-5">
                     {children}
                 </main>
             </div>

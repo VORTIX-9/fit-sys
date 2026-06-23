@@ -11,18 +11,26 @@ export default {
             colors: {
                 background: "var(--background)",
                 foreground: "var(--foreground)",
+                surface: "var(--surface)",
+                "surface-muted": "var(--surface-muted)",
+                muted: "var(--muted)",
+                line: "var(--line)",
                 primary: {
-                    DEFAULT: "#00E0FF", // Cyan/Neon Blue for accents
-                    foreground: "#000000",
+                    DEFAULT: "var(--primary)",
+                    foreground: "var(--primary-foreground)",
                 },
                 card: {
-                    DEFAULT: "rgba(30, 30, 30, 0.6)",
-                    foreground: "#FFFFFF",
+                    DEFAULT: "var(--surface)",
+                    foreground: "var(--foreground)",
                 },
                 accent: {
-                    DEFAULT: "#FF007A", // Pink/Magenta for CTA/Critical info
-                    foreground: "#FFFFFF",
+                    DEFAULT: "var(--accent)",
+                    foreground: "var(--primary-foreground)",
                 },
+                secondary: "var(--secondary)",
+                success: "var(--success)",
+                warning: "var(--warning)",
+                danger: "var(--danger)",
             },
             backgroundImage: {
                 "gradient-radial": "radial-gradient(var(--tw-gradient-stops))",

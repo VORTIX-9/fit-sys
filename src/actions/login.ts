@@ -48,7 +48,7 @@ export async function loginUser(data: { email: string; password: string }) {
             orgSlug: user.organization.slug,
             role: user.role
         };
-    } catch (error: any) {
+    } catch (error) {
         console.error("Login error:", error);
         return { success: false, error: "Нэвтрэх явцад алдаа гарлаа" };
     }

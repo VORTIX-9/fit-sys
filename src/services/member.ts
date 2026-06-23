@@ -1,5 +1,5 @@
-import { prisma } from "@/lib/prisma";
-import { UserRole, SubscriptionStatus } from "@prisma/client";
+import prisma from "@/lib/prisma";
+import { Prisma, UserRole } from "@prisma/client";
 
 export class MemberService {
     /**
@@ -11,7 +11,7 @@ export class MemberService {
                 organizationId,
                 role: UserRole.MEMBER,
                 OR: [
-                    { fullName: { contains: query, mode: 'insensitive' } },
+                    { fullName: { contains: query } },
                     { phone: { contains: query } },
                 ],
             },
@@ -55,21 +55,27 @@ export class MemberService {
      */
     static async addStaffNote(id: string, note: string, authorName: string) {
         const user = await prisma.user.findUnique({ where: { id } });
-        const existingMetadata = (user?.metadata as any) || {};
-        const notes = existingMetadata.staffNotes || [];
+        const existingMetadata = (
+            user?.metadata && typeof user.metadata === "object" && !Array.isArray(user.metadata)
+                ? user.metadata
+                : {}
+        ) as Prisma.InputJsonObject;
+        const existingNotes = Array.isArray(existingMetadata.staffNotes)
+            ? existingMetadata.staffNotes
+            : [];
 
-        notes.push({
+        const staffNotes: Prisma.InputJsonArray = [...existingNotes, {
             content: note,
             author: authorName,
             createdAt: new Date().toISOString()
-        });
+        }];
 
         return await prisma.user.update({
             where: { id },
             data: {
                 metadata: {
                     ...existingMetadata,
-                    staffNotes: notes
+                    staffNotes
                 }
             }
         });

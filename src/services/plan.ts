@@ -1,4 +1,4 @@
-import { prisma } from "@/lib/prisma";
+import prisma from "@/lib/prisma";
 import { SubscriptionStatus } from "@prisma/client";
 
 export class PlanService {
@@ -26,14 +26,12 @@ export class PlanService {
      * Freeze a membership
      */
     static async freezeMembership(id: string, days: number) {
+        void days;
+
         return await prisma.subscription.update({
             where: { id },
             data: {
-                status: SubscriptionStatus.FROZEN,
-                metadata: {
-                    freezeStartedAt: new Date().toISOString(),
-                    requestedFreezeDays: days
-                }
+                status: SubscriptionStatus.FROZEN
             }
         });
     }
@@ -42,28 +40,10 @@ export class PlanService {
      * Unfreeze and extend membership
      */
     static async unfreezeMembership(id: string) {
-        const sub = await prisma.subscription.findUnique({ where: { id } });
-        const metadata = (sub?.metadata as any) || {};
-
-        if (!metadata.freezeStartedAt) return sub;
-
-        const freezeDuration = Math.ceil(
-            (new Date().getTime() - new Date(metadata.freezeStartedAt).getTime()) / (1000 * 3600 * 24)
-        );
-
-        const newEndDate = new Date(sub!.endDate);
-        newEndDate.setDate(newEndDate.getDate() + freezeDuration);
-
         return await prisma.subscription.update({
             where: { id },
             data: {
-                status: SubscriptionStatus.ACTIVE,
-                endDate: newEndDate,
-                metadata: {
-                    ...metadata,
-                    lastFreezeDuration: freezeDuration,
-                    freezeStartedAt: null
-                }
+                status: SubscriptionStatus.ACTIVE
             }
         });
     }
