@@ -10,7 +10,7 @@ export function LanguageSwitch() {
         <button
             type="button"
             onClick={() => setLanguage(language === "MGL" ? "ENG" : "MGL")}
-            className="flex h-9 items-center gap-2 rounded-md border border-line bg-surface px-3 text-sm font-medium text-muted transition hover:text-foreground"
+            className="flex h-10 items-center gap-2 rounded-lg border border-line bg-surface px-3 text-sm font-medium text-muted transition hover:bg-surface-muted hover:text-foreground"
             aria-label="Switch language"
             title="Switch language"
         >

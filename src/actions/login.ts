@@ -9,7 +9,7 @@ export async function loginUser(data: { email: string; password: string }) {
 
         // 1. Validation
         if (!email || !password) {
-            return { success: false, error: "Имэйл болон нууц үг оруулна уу" };
+            return { success: false, error: "Имэйл хаяг болон нууц үгээ оруулна уу." };
         }
 
         // 2. Find user by email
@@ -21,7 +21,7 @@ export async function loginUser(data: { email: string; password: string }) {
         if (!user) {
             return {
                 success: false,
-                error: "Бүртгэлгүй хэрэглэгч байна. Эхлээд бүртгүүлнэ үү.",
+                error: "Энэ имэйлээр бүртгэл олдсонгүй. Эхлээд байгууллагаа бүртгүүлнэ үү.",
                 shouldSignup: true
             };
         }
@@ -50,6 +50,6 @@ export async function loginUser(data: { email: string; password: string }) {
         };
     } catch (error) {
         console.error("Login error:", error);
-        return { success: false, error: "Нэвтрэх явцад алдаа гарлаа" };
+        return { success: false, error: "Нэвтрэх явцад алдаа гарлаа. Түр хүлээгээд дахин оролдоно уу." };
     }
 }

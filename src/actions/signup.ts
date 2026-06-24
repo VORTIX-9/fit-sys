@@ -20,11 +20,11 @@ export async function createOrganization(data: SignupData) {
 
         // 1. Validation (Basic)
         if (!gymName || !subdomain || !adminName || !phone || !email || !password) {
-            return { success: false, error: "Бүх талбарыг бөглөнө үү" };
+            return { success: false, error: "Бүртгэл үүсгэхийн тулд бүх талбарыг бөглөнө үү." };
         }
 
         if (!/^[a-z0-9-]+$/.test(slug)) {
-            return { success: false, error: "Дэд домайн зөвхөн жижиг үсэг, тоо, зураас агуулна" };
+            return { success: false, error: "Системийн хаяг зөвхөн жижиг латин үсэг, тоо, зураас агуулна." };
         }
 
         // 2. Check if subdomain exists
@@ -33,7 +33,7 @@ export async function createOrganization(data: SignupData) {
         });
 
         if (existingOrg) {
-            return { success: false, error: "Энэ дэд домайн аль хэдийн бүртгэлтэй байна" };
+            return { success: false, error: "Энэ системийн хаяг аль хэдийн бүртгэлтэй байна." };
         }
 
         // 3. Create Organization & Owner User in a transaction
@@ -79,7 +79,7 @@ export async function createOrganization(data: SignupData) {
         console.error("Signup error:", error);
 
         if (error instanceof Prisma.PrismaClientKnownRequestError && error.code === "P2002") {
-            return { success: false, error: "Ижил мэдээлэлтэй бүртгэл аль хэдийн байна" };
+            return { success: false, error: "Ижил мэдээлэлтэй бүртгэл аль хэдийн байна." };
         }
 
         return {

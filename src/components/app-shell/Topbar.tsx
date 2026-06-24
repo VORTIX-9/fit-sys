@@ -55,9 +55,9 @@ export default function Topbar({ slug }: { slug: string }) {
     const settingsLabel = language === "ENG" ? "Account settings" : "Бүртгэлийн тохиргоо";
     const roleLabel = `${slug || "system"} admin`;
     const quickLinks = [
-        { label: t("members"), detail: language === "ENG" ? "Member list and renewals" : "Гишүүд, сунгалт", href: `/${slug}/app/admin/members`, icon: Users },
-        { label: t("payments"), detail: language === "ENG" ? "Payments and reports" : "Төлбөр, тайлан", href: `/${slug}/app/admin/payments`, icon: CreditCard },
-        { label: t("classes"), detail: language === "ENG" ? "Schedule and bookings" : "Хуваарь, захиалга", href: `/${slug}/app/admin/classes`, icon: Calendar },
+        { label: t("members"), detail: language === "ENG" ? "Member records and renewals" : "Гишүүнчлэл, сунгалт", href: `/${slug}/app/admin/members`, icon: Users },
+        { label: t("payments"), detail: language === "ENG" ? "Payment review and reports" : "Төлбөр шалгах, тайлан", href: `/${slug}/app/admin/payments`, icon: CreditCard },
+        { label: t("classes"), detail: language === "ENG" ? "Class schedule and bookings" : "Хичээлийн хуваарь, захиалга", href: `/${slug}/app/admin/classes`, icon: Calendar },
     ];
     const visibleQuickLinks = quickLinks.filter((item) => {
         const query = searchQuery.trim().toLowerCase();
@@ -67,14 +67,14 @@ export default function Topbar({ slug }: { slug: string }) {
         return `${item.label} ${item.detail}`.toLowerCase().includes(query);
     });
     const notifications = [
-        { title: t("renewal_alerts"), detail: language === "ENG" ? "32 members need follow-up" : "32 гишүүнд сануулга илгээх" },
-        { title: t("payment_queue"), detail: language === "ENG" ? "14 payments waiting for review" : "14 төлбөр шалгах дараалалд байна" },
+        { title: t("renewal_alerts"), detail: language === "ENG" ? "32 members expire this week" : "32 гишүүний эрх энэ 7 хоногт дуусна" },
+        { title: t("payment_queue"), detail: language === "ENG" ? "14 payments need review" : "14 төлбөр шалгах шаардлагатай" },
         { title: t("next_class"), detail: t("next_class_value") },
     ];
 
     return (
-        <header className="sticky top-0 z-40 flex h-16 items-center justify-between border-b border-line bg-background/95 px-5 backdrop-blur">
-            <div ref={searchRef} className="relative hidden w-full max-w-md lg:block">
+        <header className="sticky top-0 z-40 flex h-16 items-center justify-between border-b border-line bg-background/90 px-5 backdrop-blur-xl xl:px-8">
+            <div ref={searchRef} className="relative hidden w-full max-w-xl lg:block">
                 <div className="relative">
                     <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted" />
                     <input
@@ -91,12 +91,12 @@ export default function Topbar({ slug }: { slug: string }) {
                                 window.location.href = visibleQuickLinks[0].href;
                             }
                         }}
-                        className="input-field h-9 w-full rounded-md pl-10 pr-3 text-sm transition"
+                        className="input-field h-10 w-full rounded-xl pl-10 pr-3 text-sm transition"
                     />
                 </div>
 
                 {searchOpen && (
-                    <div className="absolute left-0 top-11 z-50 w-full overflow-hidden rounded-md border border-line bg-surface shadow-lg">
+                    <div className="absolute left-0 top-12 z-50 w-full overflow-hidden rounded-xl border border-line bg-surface shadow-xl">
                         <div className="border-b border-line px-3 py-2 text-xs font-medium text-muted">
                             {quickLabel}
                         </div>
@@ -106,7 +106,7 @@ export default function Topbar({ slug }: { slug: string }) {
                                     key={item.href}
                                     href={item.href}
                                     onClick={() => setSearchOpen(false)}
-                                    className="flex items-center gap-3 rounded-md px-3 py-2.5 text-sm transition hover:bg-surface-muted"
+                                    className="flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm transition hover:bg-surface-muted"
                                 >
                                     <item.icon className="h-4 w-4 text-muted" />
                                     <span className="min-w-0">
@@ -135,7 +135,7 @@ export default function Topbar({ slug }: { slug: string }) {
                     <button
                         type="button"
                         onClick={() => setNotificationsOpen((open) => !open)}
-                        className="relative flex h-9 w-9 items-center justify-center rounded-md border border-line bg-surface text-muted transition hover:text-foreground"
+                        className="relative flex h-10 w-10 items-center justify-center rounded-xl border border-line bg-surface text-muted transition hover:bg-surface-muted hover:text-foreground"
                         aria-label={t("notifications")}
                         aria-expanded={notificationsOpen}
                         aria-haspopup="menu"
@@ -146,7 +146,7 @@ export default function Topbar({ slug }: { slug: string }) {
                     </button>
 
                     {notificationsOpen && (
-                        <div role="menu" className="absolute right-0 top-12 z-50 w-80 overflow-hidden rounded-md border border-line bg-surface shadow-lg">
+                        <div role="menu" className="absolute right-0 top-12 z-50 w-80 overflow-hidden rounded-xl border border-line bg-surface shadow-xl">
                             <div className="border-b border-line px-4 py-3">
                                 <p className="text-sm font-semibold">{notificationsLabel}</p>
                             </div>
@@ -176,7 +176,7 @@ export default function Topbar({ slug }: { slug: string }) {
                     <button
                         type="button"
                         onClick={() => setProfileOpen((open) => !open)}
-                        className="flex h-9 w-9 items-center justify-center rounded-md border border-line bg-surface text-muted transition hover:text-foreground"
+                        className="flex h-10 w-10 items-center justify-center rounded-xl border border-line bg-surface text-muted transition hover:bg-surface-muted hover:text-foreground"
                         aria-label="Open user menu"
                         aria-expanded={profileOpen}
                         aria-haspopup="menu"
@@ -188,7 +188,7 @@ export default function Topbar({ slug }: { slug: string }) {
                     {profileOpen && (
                         <div
                             role="menu"
-                            className="absolute right-0 top-12 w-64 overflow-hidden rounded-md border border-line bg-surface shadow-lg"
+                            className="absolute right-0 top-12 w-64 overflow-hidden rounded-xl border border-line bg-surface shadow-xl"
                         >
                             <div className="border-b border-line p-4">
                                 <p className="text-sm font-semibold">Д. Бат-Эрдэнэ</p>
@@ -199,7 +199,7 @@ export default function Topbar({ slug }: { slug: string }) {
                                     type="button"
                                     role="menuitem"
                                     onClick={() => setProfileOpen(false)}
-                                    className="flex w-full items-center gap-3 rounded-md px-3 py-2 text-left text-sm text-foreground transition hover:bg-surface-muted"
+                                    className="flex w-full items-center gap-3 rounded-xl px-3 py-2 text-left text-sm text-foreground transition hover:bg-surface-muted"
                                 >
                                     <UserCircle className="h-4 w-4 text-muted" />
                                     {profileLabel}
@@ -208,7 +208,7 @@ export default function Topbar({ slug }: { slug: string }) {
                                     href={`/${slug}/app/admin/settings`}
                                     role="menuitem"
                                     onClick={() => setProfileOpen(false)}
-                                    className="flex items-center gap-3 rounded-md px-3 py-2 text-sm text-foreground transition hover:bg-surface-muted"
+                                    className="flex items-center gap-3 rounded-xl px-3 py-2 text-sm text-foreground transition hover:bg-surface-muted"
                                 >
                                     <Settings className="h-4 w-4 text-muted" />
                                     {settingsLabel}
@@ -216,7 +216,7 @@ export default function Topbar({ slug }: { slug: string }) {
                                 <Link
                                     href="/login"
                                     role="menuitem"
-                                    className="flex items-center gap-3 rounded-md px-3 py-2 text-sm text-danger transition hover:bg-surface-muted"
+                                    className="flex items-center gap-3 rounded-xl px-3 py-2 text-sm text-danger transition hover:bg-surface-muted"
                                 >
                                     <LogOut className="h-4 w-4" />
                                     {t("logout")}

@@ -26,16 +26,16 @@ export function BrandLogo({ variant = "full", className = "", priority = false }
 
     if (variant === "full") {
         return (
-            <div className={`flex items-center gap-2 ${className}`}>
+            <div className={`flex items-center gap-2.5 ${className}`}>
                 <Image
                     src={logoAssets.mark.src}
                     alt=""
                     width={logoAssets.mark.width}
                     height={logoAssets.mark.height}
                     priority={priority}
-                    className="h-7 w-7 shrink-0 object-contain"
+                    className="h-9 w-9 shrink-0 object-contain"
                 />
-                <span className="text-lg font-semibold leading-none tracking-normal text-foreground">fit.sys</span>
+                <span className="text-xl font-semibold leading-none tracking-normal text-foreground">fit.sys</span>
             </div>
         );
     }

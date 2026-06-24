@@ -13,16 +13,22 @@ import {
     Settings,
     Users,
 } from "lucide-react";
-import { useState } from "react";
 import { useLanguage } from "@/components/providers/LanguageProvider";
 import { BrandLogo } from "@/components/ui/BrandLogo";
 
 type Role = "ADMIN" | "STAFF" | "MEMBER" | "OWNER";
 
-export default function Sidebar({ slug }: { slug: string }) {
+export default function Sidebar({
+    slug,
+    collapsed,
+    onCollapsedChange,
+}: {
+    slug: string;
+    collapsed: boolean;
+    onCollapsedChange: (collapsed: boolean) => void;
+}) {
     const { t } = useLanguage();
     const pathname = usePathname();
-    const [collapsed, setCollapsed] = useState(false);
 
     const currentRole = (pathname.split("/")[3]?.toUpperCase() as Role) || "ADMIN";
     const dashboardHref = `/${slug}/app/${currentRole.toLowerCase()}`;
@@ -40,20 +46,21 @@ export default function Sidebar({ slug }: { slug: string }) {
 
     return (
         <aside
-            className={`fixed left-0 top-0 z-50 flex h-screen flex-col border-r border-line bg-surface transition-all duration-300 ${collapsed ? "w-16" : "w-60"}`}
+            className={`fixed left-0 top-0 z-50 flex h-screen flex-col border-r border-line bg-surface/95 shadow-[8px_0_30px_color-mix(in_srgb,var(--foreground)_4%,transparent)] backdrop-blur-xl transition-all duration-300 ${collapsed ? "w-16" : "w-64"}`}
         >
             <div className="flex h-16 items-center gap-3 border-b border-line px-4">
-                <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-md border border-line bg-surface p-1">
+                <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl border border-line bg-background p-1">
                     <BrandLogo variant="mark" className="h-6 w-6" priority />
                 </div>
                 {!collapsed && (
                     <div className="min-w-0">
                         <p className="truncate text-sm font-semibold">{slug || "fit.sys"}</p>
+                        <p className="mt-0.5 truncate text-xs text-muted">{t("portal")}</p>
                     </div>
                 )}
             </div>
 
-            <nav className="flex-1 space-y-0.5 overflow-y-auto px-2 py-3">
+            <nav className="flex-1 space-y-1 overflow-y-auto px-2 py-4">
                 {filteredItems.map((item) => {
                     const isDashboard = item.href === dashboardHref;
                     const isActive = isDashboard
@@ -66,8 +73,8 @@ export default function Sidebar({ slug }: { slug: string }) {
                             key={item.href}
                             href={item.href}
                             title={collapsed ? item.label : undefined}
-                            className={`flex h-10 items-center gap-3 rounded-md px-3 text-sm font-medium transition ${isActive
-                                ? "bg-surface-muted text-foreground shadow-[inset_3px_0_0_var(--primary)]"
+                            className={`flex h-10 items-center gap-3 rounded-xl px-3 text-sm font-medium transition ${isActive
+                                ? "bg-primary/10 text-primary"
                                 : "text-muted hover:bg-surface-muted hover:text-foreground"
                                 }`}
                         >
@@ -78,11 +85,11 @@ export default function Sidebar({ slug }: { slug: string }) {
                 })}
             </nav>
 
-            <div className="space-y-0.5 border-t border-line p-2">
+            <div className="space-y-1 border-t border-line p-2">
                 <button
                     type="button"
-                    onClick={() => setCollapsed(!collapsed)}
-                    className="flex h-10 w-full items-center gap-3 rounded-md px-3 text-sm font-medium text-muted transition hover:bg-surface-muted hover:text-foreground"
+                    onClick={() => onCollapsedChange(!collapsed)}
+                    className="flex h-10 w-full items-center gap-3 rounded-xl px-3 text-sm font-medium text-muted transition hover:bg-surface-muted hover:text-foreground"
                     aria-label={t("collapse")}
                     title={collapsed ? t("collapse") : undefined}
                 >
@@ -92,7 +99,7 @@ export default function Sidebar({ slug }: { slug: string }) {
 
                 <Link
                     href="/login"
-                    className="flex h-10 items-center gap-3 rounded-md px-3 text-sm font-medium text-muted transition hover:bg-surface-muted hover:text-danger"
+                    className="flex h-10 items-center gap-3 rounded-xl px-3 text-sm font-medium text-muted transition hover:bg-danger/10 hover:text-danger"
                     title={collapsed ? t("logout") : undefined}
                 >
                     <LogOut className="h-4 w-4" />

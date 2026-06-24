@@ -1,6 +1,34 @@
 "use client";
 
-import { Search, X } from "lucide-react";
+import {
+    Activity,
+    AlertTriangle,
+    BadgeCheck,
+    Bell,
+    Building2,
+    Calendar,
+    CalendarCheck,
+    Check,
+    Clock,
+    CreditCard,
+    Download,
+    Dumbbell,
+    Filter,
+    MapPin,
+    Plus,
+    QrCode,
+    ReceiptText,
+    ScanLine,
+    Search,
+    Settings,
+    ShieldCheck,
+    SlidersHorizontal,
+    UserPlus,
+    Users,
+    WalletCards,
+    X,
+    type LucideIcon,
+} from "lucide-react";
 import { FormEvent, useMemo, useState } from "react";
 import { useLanguage } from "@/components/providers/LanguageProvider";
 
@@ -68,6 +96,43 @@ type SectionConfig = {
     sideItems: { label: string; value: string; icon: IconKey }[];
 };
 
+const icons: Record<IconKey, LucideIcon> = {
+    activity: Activity,
+    alert: AlertTriangle,
+    badge: BadgeCheck,
+    bell: Bell,
+    building: Building2,
+    calendar: Calendar,
+    calendarCheck: CalendarCheck,
+    check: Check,
+    clock: Clock,
+    creditCard: CreditCard,
+    currency: CreditCard,
+    download: Download,
+    dumbbell: Dumbbell,
+    filter: Filter,
+    mapPin: MapPin,
+    plus: Plus,
+    qr: QrCode,
+    receipt: ReceiptText,
+    scan: ScanLine,
+    search: Search,
+    settings: Settings,
+    shield: ShieldCheck,
+    sliders: SlidersHorizontal,
+    userPlus: UserPlus,
+    users: Users,
+    wallet: WalletCards,
+};
+
+const toneStyles: Record<Summary["tone"], string> = {
+    primary: "bg-primary/10 text-primary",
+    secondary: "bg-secondary/10 text-secondary",
+    accent: "bg-accent/10 text-accent",
+    success: "bg-success/10 text-success",
+    warning: "bg-warning/10 text-warning",
+};
+
 const actionText: Record<"MGL" | "ENG", {
     cancel: string;
     close: string;
@@ -82,13 +147,13 @@ const actionText: Record<"MGL" | "ENG", {
     MGL: {
         cancel: "Цуцлах",
         close: "Хаах",
-        details: "Дэлгэрэнгүй",
-        download: "Тайлан татагдлаа",
+        details: "Дэлгэрэнгүй мэдээлэл",
+        download: "Тайлан татагдлаа.",
         empty: "Илэрц олдсонгүй",
-        filter: "Шүүлтүүр хэрэглэгдлээ",
-        noChanges: "Одоогоор хадгалаагүй өөрчлөлт алга.",
-        saved: "Амжилттай хадгалагдлаа",
-        submit: "Бүртгэх",
+        filter: "Жагсаалт шүүгдлээ.",
+        noChanges: "Одоогоор хадгалах өөрчлөлт алга.",
+        saved: "Өөрчлөлт хадгалагдлаа.",
+        submit: "Хадгалах",
     },
     ENG: {
         cancel: "Cancel",
@@ -123,7 +188,7 @@ function buildDraftRow(section: SectionKey, columns: Column[], language: "MGL" |
         },
         classes: {
             time: "17:30",
-            className: "Open Gym",
+            className: isEng ? "Open Gym" : "Нээлттэй заал",
             trainer: isEng ? "Staff" : "Ажилтан",
             room: isEng ? "Room A" : "A заал",
             fill: "0/20",
@@ -131,8 +196,8 @@ function buildDraftRow(section: SectionKey, columns: Column[], language: "MGL" |
         attendance: {
             time: new Date().toLocaleTimeString("en-GB", { hour: "2-digit", minute: "2-digit" }),
             member: isEng ? "New Member" : "Шинэ гишүүн",
-            type: isEng ? "Entry" : "Нэвтрэлт",
-            className: "Open gym",
+            type: isEng ? "Entry" : "Оролт",
+            className: isEng ? "Open gym" : "Нээлттэй заал",
             method: "QR",
         },
         settings: {
@@ -176,23 +241,23 @@ const content: Record<"MGL" | "ENG", Record<SectionKey, SectionConfig>> = {
     MGL: {
         members: {
             title: "Гишүүд",
-            subtitle: "Гишүүний бүртгэл, эрхийн хугацаа, сунгалтын төлөвийг нэг дор хянана.",
-            searchPlaceholder: "Нэр, утас, төлөвлөгөөгөөр хайх",
-            primaryPanelTitle: "Гишүүний жагсаалт",
+            subtitle: "Гишүүний бүртгэл, эрхийн хугацаа, сунгалтыг нэг дор хянаж удирдана.",
+            searchPlaceholder: "Нэр, утас, гишүүнчлэлийн багцаар хайх",
+            primaryPanelTitle: "Бүртгэлтэй гишүүд",
             secondaryPanelTitle: "Өнөөдрийн анхаарах зүйлс",
             actions: [
-                { label: "Шинэ гишүүн", icon: "userPlus", variant: "primary" },
-                { label: "Шүүлтүүр", icon: "filter" },
+                { label: "Гишүүн бүртгэх", icon: "userPlus", variant: "primary" },
+                { label: "Жагсаалт шүүх", icon: "filter" },
             ],
             summaries: [
-                { label: "Идэвхтэй", value: "1,284", detail: "+18 энэ долоо хоногт", icon: "users", tone: "primary" },
-                { label: "Дуусах дөхсөн", value: "32", detail: "7 хоногийн дотор", icon: "clock", tone: "warning" },
-                { label: "Шинэ бүртгэл", value: "14", detail: "өнөөдөр", icon: "userPlus", tone: "success" },
+                { label: "Идэвхтэй гишүүн", value: "1,284", detail: "+18 энэ долоо хоногт", icon: "users", tone: "primary" },
+                { label: "Эрх дуусах гэж буй", value: "32", detail: "7 хоногийн дотор", icon: "clock", tone: "warning" },
+                { label: "Өнөөдөр нэмэгдсэн", value: "14", detail: "шинэ гишүүн", icon: "userPlus", tone: "success" },
             ],
             columns: [
                 { key: "name", label: "Нэр" },
                 { key: "phone", label: "Утас" },
-                { key: "plan", label: "Төлөвлөгөө" },
+                { key: "plan", label: "Гишүүнчлэл" },
                 { key: "until", label: "Дуусах өдөр" },
                 { key: "status", label: "Төлөв" },
             ],
@@ -202,52 +267,52 @@ const content: Record<"MGL" | "ENG", Record<SectionKey, SectionConfig>> = {
                 { name: "Э. Номин", phone: "9904-3311", plan: "Pro 6 сар", until: "2026.09.02", status: "Идэвхтэй" },
             ],
             sideItems: [
-                { label: "Сунгалтын сануулга", value: "32", icon: "bell" },
-                { label: "Шинэ гишүүнд төлөвлөгөө холбох", value: "5", icon: "badge" },
-                { label: "Утас баталгаажуулаагүй", value: "8", icon: "alert" },
+                { label: "Сунгалтын сануулга илгээх", value: "32", icon: "bell" },
+                { label: "Багц холбоогүй шинэ гишүүн", value: "5", icon: "badge" },
+                { label: "Утас баталгаажаагүй", value: "8", icon: "alert" },
             ],
         },
         payments: {
-            title: "Төлбөр",
-            subtitle: "Өдрийн орлого, төлбөрийн төлөв, баталгаажуулалтын дарааллыг хянана.",
-            searchPlaceholder: "Баримт, гишүүн, төлбөрийн аргаар хайх",
-            primaryPanelTitle: "Төлбөрийн гүйлгээнүүд",
-            secondaryPanelTitle: "Баталгаажуулах дараалал",
+            title: "Төлбөрийн удирдлага",
+            subtitle: "Гишүүний төлбөр, орлого, баталгаажуулалт болон төлбөрийн төлөвийг нэг дороос удирдана.",
+            searchPlaceholder: "Гишүүн, баримтын дугаар эсвэл төлбөрөөр хайх",
+            primaryPanelTitle: "Төлбөрийн жагсаалт",
+            secondaryPanelTitle: "Анхаарах зүйлс",
             actions: [
-                { label: "Төлбөр бүртгэх", icon: "creditCard", variant: "primary" },
-                { label: "Тайлан татах", icon: "download" },
+                { label: "+ Төлбөр бүртгэх", icon: "creditCard", variant: "primary" },
+                { label: "Тайлан экспортлох", icon: "download" },
             ],
             summaries: [
-                { label: "Өдрийн орлого", value: "3.8M", detail: "+12% өчигдрөөс", icon: "currency", tone: "primary" },
-                { label: "Хүлээгдэж буй", value: "14", detail: "банк, QPay", icon: "clock", tone: "warning" },
-                { label: "Баталгаажсан", value: "46", detail: "өнөөдөр", icon: "check", tone: "success" },
+                { label: "Өнөөдрийн орлого", value: "₮3.8M", detail: "+12% өчигдрөөс", icon: "currency", tone: "primary" },
+                { label: "Хүлээгдэж буй төлбөр", value: "14", detail: "Баталгаажуулалт хүлээж байна", icon: "clock", tone: "warning" },
+                { label: "Баталгаажсан төлбөр", value: "46", detail: "Өнөөдөр", icon: "check", tone: "success" },
             ],
             columns: [
-                { key: "receipt", label: "Баримт" },
+                { key: "receipt", label: "Баримтын №" },
                 { key: "member", label: "Гишүүн" },
-                { key: "method", label: "Арга" },
-                { key: "amount", label: "Дүн" },
+                { key: "method", label: "Төлбөрийн төрөл" },
+                { key: "amount", label: "Төлсөн дүн" },
                 { key: "status", label: "Төлөв" },
             ],
             rows: [
-                { receipt: "FIT-2041", member: "Б. Анударь", method: "QPay", amount: "180,000₮", status: "Төлөгдсөн" },
-                { receipt: "FIT-2040", member: "Г. Тэмүүлэн", method: "Банк", amount: "120,000₮", status: "Шалгах" },
-                { receipt: "FIT-2039", member: "Э. Номин", method: "Бэлэн", amount: "420,000₮", status: "Төлөгдсөн" },
+                { receipt: "FIT-2041", member: "Б. Анударь", method: "QPay", amount: "180,000₮", status: "Баталгаажсан" },
+                { receipt: "FIT-2040", member: "Г. Тэмүүлэн", method: "Банк", amount: "120,000₮", status: "Хүлээгдэж байна" },
+                { receipt: "FIT-2039", member: "Э. Номин", method: "Бэлэн", amount: "420,000₮", status: "Баталгаажсан" },
             ],
             sideItems: [
-                { label: "Банкны хуулга тулгах", value: "9", icon: "receipt" },
-                { label: "QPay callback хүлээж буй", value: "3", icon: "wallet" },
+                { label: "Банкны төлбөр тулгах шаардлагатай", value: "9", icon: "receipt" },
+                { label: "QPay баталгаажуулах төлбөр", value: "3", icon: "wallet" },
                 { label: "Буцаалтын хүсэлт", value: "2", icon: "alert" },
             ],
         },
         classes: {
-            title: "Хичээл",
-            subtitle: "Хуваарь, багш, заалны багтаамж болон захиалгын дүүргэлтийг удирдана.",
+            title: "Хичээлийн хуваарь",
+            subtitle: "Хичээл, багш, заалны багтаамж болон захиалгын дүүргэлтийг удирдана.",
             searchPlaceholder: "Хичээл, багш, заалаар хайх",
-            primaryPanelTitle: "Өнөөдрийн хуваарь",
-            secondaryPanelTitle: "Хуваарийн хяналт",
+            primaryPanelTitle: "Өнөөдрийн хичээлүүд",
+            secondaryPanelTitle: "Хуваарийн анхаарах зүйлс",
             actions: [
-                { label: "Хичээл нэмэх", icon: "plus", variant: "primary" },
+                { label: "Хичээл бүртгэх", icon: "plus", variant: "primary" },
                 { label: "Хуваарь шүүх", icon: "calendar" },
             ],
             summaries: [
@@ -270,56 +335,56 @@ const content: Record<"MGL" | "ENG", Record<SectionKey, SectionConfig>> = {
             sideItems: [
                 { label: "Багш солих шаардлагатай", value: "1", icon: "alert" },
                 { label: "Дүүрсэн хичээл", value: "3", icon: "check" },
-                { label: "Шинэ захиалга", value: "27", icon: "calendarCheck" },
+                { label: "Шинэ захиалга орсон", value: "27", icon: "calendarCheck" },
             ],
         },
         attendance: {
-            title: "Ирц",
-            subtitle: "QR уншилт, гараар бүртгэсэн ирц, тухайн өдрийн оролтыг хянана.",
-            searchPlaceholder: "Гишүүн, хичээл, ирцийн аргаар хайх",
-            primaryPanelTitle: "Сүүлийн ирц",
-            secondaryPanelTitle: "QR ирцийн самбар",
+            title: "Ирц бүртгэл",
+            subtitle: "QR уншуулсан болон гараар бүртгэсэн оролт, хичээлийн ирцийг хянана.",
+            searchPlaceholder: "Гишүүн, хичээл, бүртгэлийн аргаар хайх",
+            primaryPanelTitle: "Сүүлд бүртгэгдсэн ирц",
+            secondaryPanelTitle: "Ирцийн төхөөрөмжүүд",
             actions: [
                 { label: "QR уншуулах", icon: "qr", variant: "primary" },
-                { label: "Гараар бүртгэх", icon: "scan" },
+                { label: "Гараар ирц бүртгэх", icon: "scan" },
             ],
             summaries: [
                 { label: "Өнөөдрийн ирц", value: "216", detail: "09:00 цагаас хойш", icon: "scan", tone: "primary" },
-                { label: "Хичээлийн ирц", value: "88", detail: "5 хичээлээр", icon: "activity", tone: "accent" },
-                { label: "Гараар бүртгэсэн", value: "11", detail: "админ баталгаажуулсан", icon: "badge", tone: "warning" },
+                { label: "Хичээлээр бүртгэгдсэн", value: "88", detail: "5 хичээлээр", icon: "activity", tone: "accent" },
+                { label: "Гараар нэмсэн", value: "11", detail: "админ баталгаажуулсан", icon: "badge", tone: "warning" },
             ],
             columns: [
                 { key: "time", label: "Цаг" },
                 { key: "member", label: "Гишүүн" },
-                { key: "type", label: "Төрөл" },
+                { key: "type", label: "Бүртгэл" },
                 { key: "className", label: "Хичээл" },
                 { key: "method", label: "Арга" },
             ],
             rows: [
-                { time: "12:06", member: "Б. Анударь", type: "Нэвтрэлт", className: "Open gym", method: "QR" },
+                { time: "12:06", member: "Б. Анударь", type: "Оролт", className: "Нээлттэй заал", method: "QR" },
                 { time: "11:58", member: "Г. Тэмүүлэн", type: "Хичээл", className: "Сунгалт", method: "QR" },
-                { time: "11:44", member: "Э. Номин", type: "Нэвтрэлт", className: "Open gym", method: "Гараар" },
+                { time: "11:44", member: "Э. Номин", type: "Оролт", className: "Нээлттэй заал", method: "Гараар" },
             ],
             sideItems: [
-                { label: "QR төхөөрөмж идэвхтэй", value: "2", icon: "qr" },
-                { label: "Гараагүй ирц", value: "34", icon: "clock" },
+                { label: "QR уншигч идэвхтэй", value: "2", icon: "qr" },
+                { label: "Гараагүй гишүүд", value: "34", icon: "clock" },
                 { label: "Давхар уншилт шалгах", value: "4", icon: "alert" },
             ],
         },
         settings: {
-            title: "Тохиргоо",
-            subtitle: "Байгууллагын мэдээлэл, салбар, эрхийн түвшин, мэдэгдлийн тохиргоог удирдана.",
+            title: "Байгууллагын тохиргоо",
+            subtitle: "Байгууллагын мэдээлэл, салбар, ажилтны эрх, мэдэгдлийн дүрмийг удирдана.",
             searchPlaceholder: "Тохиргоо, салбар, эрхээр хайх",
-            primaryPanelTitle: "Системийн тохиргоо",
-            secondaryPanelTitle: "Аюулгүй ажиллагаа",
+            primaryPanelTitle: "Тохиргооны жагсаалт",
+            secondaryPanelTitle: "Системийн хяналт",
             actions: [
-                { label: "Хадгалах", icon: "check", variant: "primary" },
-                { label: "Өөрчлөлт харах", icon: "sliders" },
+                { label: "Өөрчлөлт хадгалах", icon: "check", variant: "primary" },
+                { label: "Тохиргоо харах", icon: "sliders" },
             ],
             summaries: [
                 { label: "Салбар", value: "2", detail: "идэвхтэй байршил", icon: "building", tone: "primary" },
                 { label: "Ажилтан", value: "18", detail: "эрхийн түвшинтэй", icon: "shield", tone: "success" },
-                { label: "Мэдэгдэл", value: "6", detail: "идэвхтэй дүрэм", icon: "bell", tone: "accent" },
+                { label: "Мэдэгдлийн дүрэм", value: "6", detail: "идэвхтэй", icon: "bell", tone: "accent" },
             ],
             columns: [
                 { key: "setting", label: "Тохиргоо" },
@@ -329,7 +394,7 @@ const content: Record<"MGL" | "ENG", Record<SectionKey, SectionConfig>> = {
             ],
             rows: [
                 { setting: "Байгууллагын нэр", value: "goku-gym", owner: "Админ", status: "Идэвхтэй" },
-                { setting: "Үндсэн салбар", value: "Main location", owner: "Менежер", status: "Идэвхтэй" },
+                { setting: "Төв салбар", value: "Main location", owner: "Менежер", status: "Идэвхтэй" },
                 { setting: "Сунгалтын сануулга", value: "7 хоногийн өмнө", owner: "Систем", status: "Идэвхтэй" },
             ],
             sideItems: [
@@ -339,13 +404,13 @@ const content: Record<"MGL" | "ENG", Record<SectionKey, SectionConfig>> = {
             ],
         },
         memberships: {
-            title: "Гишүүнчлэлийн төлөвлөгөө",
-            subtitle: "Үнэ, хугацаа, эрхийн багцыг үүсгэж өдөр тутмын борлуулалтад ашиглана.",
-            searchPlaceholder: "Төлөвлөгөө, үнэ, хугацаагаар хайх",
-            primaryPanelTitle: "Төлөвлөгөөний жагсаалт",
+            title: "Гишүүнчлэлийн багц",
+            subtitle: "Үнийн багц, хугацаа, эрхийн нөхцөлийг тохируулж борлуулалтад ашиглана.",
+            searchPlaceholder: "Багц, үнэ, хугацаагаар хайх",
+            primaryPanelTitle: "Багцын жагсаалт",
             secondaryPanelTitle: "Борлуулалтын тойм",
             actions: [
-                { label: "Төлөвлөгөө нэмэх", icon: "plus", variant: "primary" },
+                { label: "Багц нэмэх", icon: "plus", variant: "primary" },
                 { label: "Тохиргоо", icon: "settings" },
             ],
             summaries: [
@@ -354,7 +419,7 @@ const content: Record<"MGL" | "ENG", Record<SectionKey, SectionConfig>> = {
                 { label: "Хамгийн эрэлттэй", value: "Pro", detail: "42% борлуулалт", icon: "activity", tone: "accent" },
             ],
             columns: [
-                { key: "plan", label: "Төлөвлөгөө" },
+                { key: "plan", label: "Багц" },
                 { key: "duration", label: "Хугацаа" },
                 { key: "sessions", label: "Эрх" },
                 { key: "price", label: "Үнэ" },
@@ -652,55 +717,69 @@ function AdminSectionContent({
     };
 
     return (
-        <div className="space-y-5 p-5">
-            <div className="flex flex-col gap-3 xl:flex-row xl:items-center xl:justify-between">
+        <div className="space-y-6 p-5 xl:p-8">
+            <div className="flex flex-col gap-4 xl:flex-row xl:items-center xl:justify-between">
                 <div className="max-w-3xl">
-                    <h1 className="text-2xl font-semibold leading-tight">{page.title}</h1>
-                    <p className="mt-1 max-w-2xl text-sm leading-6 text-muted">{page.subtitle}</p>
+                    <h1 className="text-3xl font-bold leading-tight">{page.title}</h1>
+                    <p className="mt-2 max-w-2xl text-sm leading-6 text-muted">{page.subtitle}</p>
                 </div>
 
                 <div className="flex flex-wrap gap-2">
-                    {page.actions.map((action) => (
-                        <button
-                            key={action.label}
-                            type="button"
-                            onClick={() => handleAction(action)}
-                            className={
-                                action.variant === "primary"
-                                    ? "button-primary inline-flex h-9 items-center rounded-md px-3 text-sm font-semibold transition"
-                                    : "button-secondary inline-flex h-9 items-center rounded-md px-3 text-sm font-semibold transition"
-                            }
-                        >
-                            {action.label}
-                        </button>
-                    ))}
+                    {page.actions.map((action) => {
+                        const ActionIcon = icons[action.icon];
+
+                        return (
+                            <button
+                                key={action.label}
+                                type="button"
+                                onClick={() => handleAction(action)}
+                                className={
+                                    action.variant === "primary"
+                                        ? "button-primary inline-flex h-10 items-center gap-2 rounded-xl px-4 text-sm font-semibold transition"
+                                        : "button-secondary inline-flex h-10 items-center gap-2 rounded-xl px-4 text-sm font-semibold transition"
+                                }
+                            >
+                                <ActionIcon className="h-4 w-4" />
+                                {action.label}
+                            </button>
+                        );
+                    })}
                 </div>
             </div>
 
             {notice && (
                 <div
                     aria-live="polite"
-                    className="fixed right-5 top-20 z-[80] rounded-md border border-line bg-surface px-4 py-3 text-sm text-foreground shadow-lg"
+                    className="fixed right-5 top-20 z-[80] rounded-2xl border border-line bg-surface px-4 py-3 text-sm text-foreground shadow-lg"
                 >
                     {notice}
                 </div>
             )}
 
             <div className="grid gap-3 md:grid-cols-3">
-                {page.summaries.map((item) => (
-                    <div key={item.label} className="rounded-md border border-line bg-surface p-4">
-                        <div className="flex items-baseline justify-between gap-3">
-                            <p className="text-sm text-muted">{item.label}</p>
-                            <p className="text-xs text-muted">{item.detail}</p>
+                {page.summaries.map((item) => {
+                    const SummaryIcon = icons[item.icon];
+
+                    return (
+                        <div key={item.label} className="rounded-2xl border border-line bg-surface p-4 shadow-sm">
+                            <div className="flex items-start justify-between gap-3">
+                                <div>
+                                    <p className="text-sm text-muted">{item.label}</p>
+                                    <p className="mt-2 text-3xl font-bold leading-tight">{item.value}</p>
+                                </div>
+                                <div className={`flex h-10 w-10 items-center justify-center rounded-lg ${toneStyles[item.tone]}`}>
+                                    <SummaryIcon className="h-4 w-4" />
+                                </div>
+                            </div>
+                            <p className="mt-3 text-xs text-muted">{item.detail}</p>
                         </div>
-                        <p className="mt-2 text-2xl font-semibold">{item.value}</p>
-                    </div>
-                ))}
+                    );
+                })}
             </div>
 
             <div className="grid gap-5 xl:grid-cols-[1fr_320px]">
-                <section className="rounded-md border border-line bg-surface">
-                    <div className="flex flex-col gap-3 border-b border-line p-4 lg:flex-row lg:items-center lg:justify-between">
+                <section className="overflow-hidden rounded-2xl border border-line bg-surface shadow-sm">
+                    <div className="flex flex-col gap-3 border-b border-line p-5 lg:flex-row lg:items-center lg:justify-between">
                         <div>
                             <h2 className="text-base font-semibold">{page.primaryPanelTitle}</h2>
                         </div>
@@ -708,7 +787,7 @@ function AdminSectionContent({
                             <div className="relative min-w-0 sm:w-72">
                                 <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted" />
                                 <input
-                                    className="input-field h-9 w-full rounded-md pl-10 pr-3 text-sm"
+                                    className="input-field h-10 w-full rounded-xl pl-10 pr-3 text-sm"
                                     placeholder={page.searchPlaceholder}
                                     type="search"
                                     value={searchText}
@@ -723,8 +802,9 @@ function AdminSectionContent({
                             <button
                                 type="button"
                                 onClick={applyFilter}
-                                className="button-secondary inline-flex h-9 items-center justify-center rounded-md px-3 text-sm font-semibold transition"
+                                className="button-secondary inline-flex h-10 items-center justify-center gap-2 rounded-xl px-4 text-sm font-semibold transition"
                             >
+                                <Filter className="h-4 w-4" />
                                 {language === "ENG" ? "Filter" : "Шүүх"}
                             </button>
                         </div>
@@ -732,16 +812,16 @@ function AdminSectionContent({
 
                     <div className="overflow-x-auto">
                         <table className="w-full min-w-[720px] text-left text-sm">
-                            <thead className="border-b border-line bg-surface-muted text-xs text-muted">
-                                <tr>
+                            <thead className="bg-surface-muted text-xs text-muted">
+                                <tr className="border-b border-line">
                                     {page.columns.map((column) => (
-                                        <th key={column.key} className="px-4 py-3 font-medium">
+                                        <th key={column.key} className="px-5 py-3 text-sm font-medium text-muted">
                                             {column.label}
                                         </th>
                                     ))}
                                 </tr>
                             </thead>
-                            <tbody className="divide-y divide-line">
+                            <tbody className="divide-y divide-[color:var(--line)]">
                                 {filteredRows.map((row, rowIndex) => (
                                     <tr
                                         key={`${section}-${rowIndex}`}
@@ -753,16 +833,34 @@ function AdminSectionContent({
                                                 setSelectedRow(row);
                                             }
                                         }}
-                                        className="cursor-pointer transition hover:bg-surface-muted/70 focus-visible:bg-surface-muted focus-visible:outline-none"
+                                        className="cursor-pointer transition hover:bg-surface-muted/60 focus-visible:bg-surface-muted focus-visible:outline-none"
                                     >
                                         {page.columns.map((column, columnIndex) => (
-                                            <td key={column.key} className="px-4 py-4">
-                                                {columnIndex === page.columns.length - 1 ? (
-                                                    <span className="inline-flex rounded-md border border-line bg-surface px-2 py-0.5 text-xs font-medium text-foreground">
-                                                        {row[column.key]}
-                                                    </span>
+                                            <td key={column.key} className={"px-5 py-5 align-middle " + (column.key === 'amount' ? 'text-right' : '')}>
+                                                {column.key === 'status' ? (
+                                                    (() => {
+                                                        const status = String(row[column.key] ?? "");
+                                                        const statusMap: Record<string, string> = {
+                                                            'Баталгаажсан': 'bg-success/10 text-success',
+                                                            'Төлөгдсөн': 'bg-success/10 text-success',
+                                                            'Хүлээгдэж байна': 'bg-warning/10 text-warning',
+                                                            'Шалгах': 'bg-warning/10 text-warning',
+                                                            'Буцаасан': 'bg-danger/10 text-danger',
+                                                            'Цуцлагдсан': 'bg-surface-muted text-muted',
+                                                        };
+
+                                                        const cls = statusMap[status] ?? 'bg-surface px-2.5 py-1 text-xs text-muted';
+
+                                                        return (
+                                                            <span className={`inline-flex items-center rounded-full px-3 py-1 text-xs font-medium ${cls}`}>
+                                                                {status}
+                                                            </span>
+                                                        );
+                                                    })()
+                                                ) : column.key === 'amount' ? (
+                                                    <span className="font-semibold">{row[column.key]}</span>
                                                 ) : (
-                                                    <span className={columnIndex === 0 ? "font-medium" : "text-muted"}>
+                                                    <span className={columnIndex === 0 ? 'font-semibold' : 'text-muted'}>
                                                         {row[column.key]}
                                                     </span>
                                                 )}
@@ -779,21 +877,59 @@ function AdminSectionContent({
                                 )}
                             </tbody>
                         </table>
+
+                        {/* Analytics section under the table */}
+                        <div className="mt-6 rounded-2xl border border-line bg-surface p-5 shadow-sm">
+                            <h3 className="text-base font-semibold">Орлогын хандлага</h3>
+                            <p className="mt-1 text-sm text-muted">Орлогын график (сүүлийн 7-30 хоног)</p>
+                            <div className="mt-4 h-40 w-full">
+                                <svg className="h-full w-full" viewBox="0 0 800 200" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+                                    <defs>
+                                        <linearGradient id="g" x1="0" x2="0" y1="0" y2="1">
+                                            <stop offset="0%" stopColor="rgba(37,99,235,0.12)" />
+                                            <stop offset="100%" stopColor="rgba(37,99,235,0)" />
+                                        </linearGradient>
+                                    </defs>
+                                    <path d="M0,140 L80,120 L160,100 L240,110 L320,80 L400,70 L480,95 L560,60 L640,50 L720,70 L800,40" fill="url(#g)" stroke="#2563eb" strokeWidth="2" strokeLinejoin="round" strokeLinecap="round" />
+                                </svg>
+                            </div>
+                            <div className="mt-4 grid grid-cols-2 gap-4">
+                                <div>
+                                    <p className="text-sm text-muted">Төлбөрийн төрлийн харьцаа</p>
+                                    <div className="mt-2 h-20 w-full rounded-lg bg-surface-muted" />
+                                </div>
+                                <div>
+                                    <p className="text-sm text-muted">(QPay / Банк / Бэлэн)</p>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </section>
 
-                <aside className="rounded-md border border-line bg-surface p-4">
-                    <div className="flex items-center justify-between gap-3">
-                        <h2 className="text-base font-semibold">{page.secondaryPanelTitle}</h2>
+                <aside className="rounded-2xl border border-line bg-surface p-5 shadow-sm">
+                    <div className="flex items-start justify-between gap-3">
+                        <div>
+                            <h2 className="text-base font-semibold">{page.secondaryPanelTitle}</h2>
+                            <p className="mt-1 text-xs text-muted">Таны оролцоо шаардлагатай төлбөрүүд</p>
+                        </div>
                     </div>
 
                     <div className="mt-4 divide-y divide-line">
-                        {page.sideItems.map((item) => (
-                            <div key={item.label} className="flex items-center justify-between gap-4 py-3 first:pt-0 last:pb-0">
-                                <p className="min-w-0 truncate text-sm text-muted">{item.label}</p>
-                                <p className="shrink-0 text-sm font-semibold">{item.value}</p>
-                            </div>
-                        ))}
+                        {page.sideItems.map((item) => {
+                            const SideIcon = icons[item.icon];
+
+                            return (
+                                <div key={item.label} className="flex items-center justify-between gap-4 py-3 first:pt-0 last:pb-0">
+                                    <div className="flex min-w-0 items-center gap-3">
+                                        <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-surface-muted text-primary">
+                                            <SideIcon className="h-4 w-4" />
+                                        </div>
+                                        <p className="min-w-0 truncate text-sm text-muted">{item.label}</p>
+                                    </div>
+                                    <p className="shrink-0 text-sm font-semibold">{item.value}</p>
+                                </div>
+                            );
+                        })}
                     </div>
                 </aside>
             </div>
@@ -817,7 +953,7 @@ function AdminSectionContent({
                             <button
                                 type="button"
                                 onClick={() => setSelectedRow(null)}
-                                className="flex h-8 w-8 items-center justify-center rounded-md text-muted transition hover:bg-surface-muted hover:text-foreground"
+                                className="flex h-9 w-9 items-center justify-center rounded-xl text-muted transition hover:bg-surface-muted hover:text-foreground"
                                 aria-label={labels.close}
                             >
                                 <X className="h-4 w-4" />
@@ -825,7 +961,7 @@ function AdminSectionContent({
                         </div>
 
                         <div className="flex-1 overflow-y-auto p-5">
-                            <dl className="divide-y divide-line rounded-md border border-line">
+                            <dl className="divide-y divide-line rounded-2xl border border-line">
                                 {page.columns.map((column) => (
                                     <div key={column.key} className="grid grid-cols-[140px_1fr] gap-4 px-4 py-3">
                                         <dt className="text-sm text-muted">{column.label}</dt>
@@ -841,7 +977,7 @@ function AdminSectionContent({
                             <button
                                 type="button"
                                 onClick={() => setSelectedRow(null)}
-                                className="button-secondary inline-flex h-9 w-full items-center justify-center rounded-md px-3 text-sm font-semibold transition"
+                                className="button-secondary inline-flex h-10 w-full items-center justify-center rounded-xl px-3 text-sm font-semibold transition"
                             >
                                 {labels.close}
                             </button>
@@ -852,7 +988,7 @@ function AdminSectionContent({
 
             {dialogMode && (
                 <div className="fixed inset-0 z-[60] flex items-center justify-center bg-foreground/20 p-4">
-                    <div className="w-full max-w-lg rounded-md border border-line bg-surface shadow-lg">
+                    <div className="w-full max-w-lg overflow-hidden rounded-2xl border border-line bg-surface shadow-lg">
                         <div className="flex items-center justify-between border-b border-line px-5 py-4">
                             <h2 className="text-base font-semibold">
                                 {dialogMode === "create" ? page.actions[0]?.label : page.actions[1]?.label}
@@ -860,7 +996,7 @@ function AdminSectionContent({
                             <button
                                 type="button"
                                 onClick={() => setDialogMode(null)}
-                                className="rounded-md px-2 py-1 text-sm text-muted transition hover:bg-surface-muted hover:text-foreground"
+                                className="rounded-xl px-2 py-1 text-sm text-muted transition hover:bg-surface-muted hover:text-foreground"
                             >
                                 {labels.close}
                             </button>
@@ -873,7 +1009,7 @@ function AdminSectionContent({
                                         <label key={column.key} className="block text-sm">
                                             <span className="mb-1 block font-medium">{column.label}</span>
                                             <input
-                                                className="input-field h-9 w-full rounded-md px-3 text-sm"
+                                                className="input-field h-10 w-full rounded-xl px-3 text-sm"
                                                 value={draftRow[column.key] ?? ""}
                                                 onChange={(event) =>
                                                     setDraftRow((currentDraft) => ({
@@ -889,13 +1025,13 @@ function AdminSectionContent({
                                     <button
                                         type="button"
                                         onClick={() => setDialogMode(null)}
-                                        className="button-secondary inline-flex h-9 items-center rounded-md px-3 text-sm font-semibold transition"
+                                        className="button-secondary inline-flex h-10 items-center rounded-xl px-4 text-sm font-semibold transition"
                                     >
                                         {labels.cancel}
                                     </button>
                                     <button
                                         type="submit"
-                                        className="button-primary inline-flex h-9 items-center rounded-md px-3 text-sm font-semibold transition"
+                                        className="button-primary inline-flex h-10 items-center rounded-xl px-4 text-sm font-semibold transition"
                                     >
                                         {labels.submit}
                                     </button>
@@ -908,7 +1044,7 @@ function AdminSectionContent({
                                     <button
                                         type="button"
                                         onClick={() => setDialogMode(null)}
-                                        className="button-secondary inline-flex h-9 items-center rounded-md px-3 text-sm font-semibold transition"
+                                        className="button-secondary inline-flex h-10 items-center rounded-xl px-4 text-sm font-semibold transition"
                                     >
                                         {labels.close}
                                     </button>
